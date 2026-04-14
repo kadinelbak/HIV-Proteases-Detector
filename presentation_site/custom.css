@@ -1,6 +1,6 @@
 /* Make KaTeX/math smaller and wrap if needed */
 .katex, .katex-display {
-  font-size: 0.95em !important;
+  font-size: 0.82em !important;
   white-space: normal !important;
   word-break: break-word !important;
   line-height: 1.2 !important;
@@ -8,7 +8,7 @@
 
 /* Prevent math overflow in slide content */
 .slides, .reveal .slides {
-  overflow-x: auto !important;
+  overflow: hidden !important;
 }
 
 /* Tweak interactive demo visuals for better fit */
@@ -187,7 +187,7 @@ body {
 }
 .katex {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  font-size: 1.2em;
+  font-size: 0.82em;
   letter-spacing: 0.01em;
 }
 .demo-placeholder {
@@ -283,8 +283,6 @@ body {
   border-radius: 12px 0 0 12px;
   padding: 0.75rem 0.5rem;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(129,140,248,0.3) transparent;
   transform: translateX(calc(100% + 22px));
   opacity: 0;
   transition: transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.28s;
@@ -329,6 +327,19 @@ body {
   background: #12121a;
   border: 1px solid rgba(129,140,248,0.12);
 }
+/* ── Hidden scrollbars ───────────────────────────────────────────────────── */
+/* Firefox + IE/Edge legacy */
+* { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+/* Chrome / Safari / Edge (Chromium) */
+*::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+/* Explicit overrides for document root to prevent viewport scrollbar */
+html, body {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none !important; }
+
 .sidebar-item span {
   font-size: 0.6rem;
   color: #9ca3af;

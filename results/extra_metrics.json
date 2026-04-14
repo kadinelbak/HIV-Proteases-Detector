@@ -19,7 +19,8 @@
     "training_validation_loss": "results\\presentation_figures\\03_training_validation_loss.png",
     "roc_curve": "results\\presentation_figures\\04_roc_curve.png",
     "confusion_matrix": "results\\presentation_figures\\05_confusion_matrix.png",
-    "precision_recall_curve": "results\\presentation_figures\\06_precision_recall_curve.png"
+    "precision_recall_curve": "results\\presentation_figures\\06_precision_recall_curve.png",
+    "feature_importance": "results\\presentation_figures\\07_feature_importance_permutation.png"
   },
   "config": {
     "seed": 42,

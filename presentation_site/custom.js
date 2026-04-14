@@ -42,6 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
     initSidebar();
     setBokehSlide(0);
     setupInteractivesForSlide(0);
+    setupFeatureImportance();          // wire unconditionally — elements always in DOM
     deck.on('slidechanged', function (event) {
       var idx = event.indexh;
       updateStepper(idx);
@@ -717,5 +718,49 @@ window.addEventListener('DOMContentLoaded', function () {
   initBokeh();
   animateBokeh();
   // ─────────────────────────────────────────────────────────────────────────────
+
+  // ── Feature Importance: Bit → Molecule Highlight ─────────────────────────
+  function setupFeatureImportance() {
+    var highlight = document.getElementById('mol-env-highlight');
+    var table     = document.getElementById('feat-imp-table');
+    if (!highlight || !table) {
+      console.warn('[HIV] setupFeatureImportance: elements not found', { highlight: !!highlight, table: !!table });
+      return;
+    }
+    console.log('[HIV] setupFeatureImportance: wiring', table.querySelectorAll('tr.feat-row').length, 'rows');
+
+    var N_COLS = 3, N_ROWS = 2;
+
+    function showHighlight(molIdx) {
+      if (molIdx < 0) { highlight.style.display = 'none'; return; }
+      var col = molIdx % N_COLS;
+      var row = Math.floor(molIdx / N_COLS);
+      highlight.style.left    = (col / N_COLS * 100) + '%';
+      highlight.style.top     = (row / N_ROWS * 100) + '%';
+      highlight.style.width   = (100 / N_COLS) + '%';
+      highlight.style.height  = (100 / N_ROWS) + '%';
+      highlight.style.display = 'block';
+    }
+
+    // Use event delegation on the table body — works regardless of display state
+    table.addEventListener('mouseover', function (e) {
+      var tr = e.target.closest('tr.feat-row');
+      if (!tr) return;
+      var molIdx = parseInt(tr.dataset.molIdx, 10);
+      table.querySelectorAll('tr.feat-row').forEach(function (r) {
+        r.style.opacity    = (r === tr) ? '1'    : '0.4';
+        r.style.background = (r === tr) ? 'rgba(250,204,21,0.09)' : '';
+      });
+      showHighlight(molIdx);
+    });
+
+    table.addEventListener('mouseleave', function () {
+      table.querySelectorAll('tr.feat-row').forEach(function (r) {
+        r.style.opacity = '1';
+        r.style.background = '';
+      });
+      highlight.style.display = 'none';
+    });
+  }
 
 }); // end DOMContentLoaded
