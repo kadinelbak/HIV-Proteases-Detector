@@ -4,6 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI-Driven Drug Discovery: Predicting HIV-1 Protease Inhibition</title>
+  <script>
+    window.onerror = function(msg, src, line, col) {
+      var b = document.getElementById('_err');
+      if (!b) { b = document.createElement('div'); b.id = '_err'; b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#dc2626;color:#fff;font:13px monospace;padding:8px 12px;white-space:pre-wrap;'; document.body.appendChild(b); }
+      b.textContent += '\nJS ERROR: ' + msg + '  (' + (src||'').split('/').pop() + ':' + line + ':' + col + ')';
+    };
+  </script>
   <!-- Reveal.js (local) -->
   <link rel="stylesheet" href="./node_modules/reveal.js/dist/reveal.css">
   <link rel="stylesheet" href="./node_modules/reveal.js/dist/theme/black.css" id="theme">
@@ -29,6 +36,8 @@
     <div class="step" id="step-7">7</div>
     <div class="step" id="step-8">8</div>
     <div class="step" id="step-9">9</div>
+    <div class="step" id="step-10">10</div>
+    <div class="step" id="step-11">11</div>
   </div>
   <div class="reveal">
     <div class="slides max-w-screen-lg mx-auto flex flex-col justify-center items-center" style="min-height: 90vh;">
@@ -111,27 +120,50 @@
                   <img src="./figures/02_sample_fingerprints.png" alt="Sample Fingerprint" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
-              <div class="tab-panel w-full p-6" data-panel="int2" style="display:none">
-                <div class="font-semibold mb-2">Molecule Decoder</div>
-                <div class="flex gap-6 items-center mb-4">
-                  <!-- SMILES string with hoverable spans -->
-                  <div id="smiles-string" class="font-mono text-lg bg-black/30 rounded px-4 py-2 cursor-pointer select-text">
-                    <span class="smiles-atom" data-bit="12">C</span><span class="smiles-atom" data-bit="13">C</span><span class="smiles-bond" data-bit="14">(=O)</span><span class="smiles-atom" data-bit="15">N</span><span class="smiles-bond" data-bit="16">c</span><span class="smiles-atom" data-bit="17">1</span><span class="smiles-atom" data-bit="18">c</span><span class="smiles-atom" data-bit="19">c</span><span class="smiles-atom" data-bit="20">c</span><span class="smiles-bond" data-bit="21">(c</span><span class="smiles-atom" data-bit="22">c</span><span class="smiles-atom" data-bit="23">1</span><span class="smiles-bond" data-bit="24">)O</span>
-                  </div>
-                  <!-- Bit grid visual -->
-                  <div id="bit-grid" style="display:grid;grid-template-columns:repeat(32,1fr);grid-template-rows:repeat(32,1fr);gap:1px;width:160px;height:160px;background:#23272f;border-radius:8px;box-shadow:0 0 0 2px #818cf8;"></div>
+              <div class="tab-panel w-full p-3" data-panel="int2" style="display:none">
+                <div class="text-xs text-gray-400 text-center mb-2">Each atom's circular neighborhood (radius 0–2) hashes to <em>multiple scattered</em> bit positions in the 2048-bit fingerprint</div>
+                <!-- Molecule: acetyl aminophenol — CC(=O)Nc1ccc(O)cc1 -->
+                <div id="smiles-string" class="font-mono text-sm bg-black/30 rounded px-3 py-2 mb-3 text-center select-none tracking-wide">
+                  <span class="smiles-group font-bold" data-bits="45,234,812" data-color="#f59e0b" title="Methyl group — CH₃: 3 hash hits">CH₃</span><!--
+                  --><span class="text-gray-500">–</span><!--
+                  --><span class="smiles-group font-bold" data-bits="156,423,967,1018" data-color="#2dd4bf" title="Carbonyl — C=O: 4 hash hits">C(=O)</span><!--
+                  --><span class="smiles-group font-bold" data-bits="67,378,512,689" data-color="#a78bfa" title="Amine nitrogen — NH: 4 hash hits">NH</span><!--
+                  --><span class="smiles-group font-bold" data-bits="89,201,312,455,601,778,903,1001" data-color="#f472b6" title="Aromatic ring — 6 carbons: 8 hash hits">C₆H₃</span><!--
+                  --><span class="smiles-group font-bold" data-bits="112,387,654,890" data-color="#86efac" title="Hydroxyl — OH: 4 hash hits">OH</span>
                 </div>
-                <span class="text-xs mt-2 text-gray-400">Hover over SMILES atoms/bonds to highlight fingerprint bits</span>
+                <div class="flex items-start gap-3 justify-center">
+                  <div class="flex flex-col items-center">
+                    <div id="bit-grid" style="display:grid;grid-template-columns:repeat(32,1fr);grid-template-rows:repeat(32,1fr);gap:1px;width:190px;height:190px;background:#0a0a0a;border-radius:6px;border:1px solid rgba(129,140,248,0.3);"></div>
+                    <div class="text-xs text-gray-500 mt-1">2048-bit fingerprint · folded to 32×32</div>
+                  </div>
+                  <div class="flex flex-col gap-2 pt-1 text-xs">
+                    <button id="show-all-bits" class="tab-btn tab-active px-3 py-1 text-xs">Show molecule</button>
+                    <button id="clear-bits" class="tab-btn px-3 py-1 text-xs">Clear</button>
+                    <div class="mt-2 space-y-1 text-gray-300">
+                      <div><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1 align-middle" style="background:#f59e0b"></span>CH₃ &mdash; methyl</div>
+                      <div><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1 align-middle" style="background:#2dd4bf"></span>C=O &mdash; carbonyl</div>
+                      <div><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1 align-middle" style="background:#a78bfa"></span>NH &mdash; amine</div>
+                      <div><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1 align-middle" style="background:#f472b6"></span>C₆H₃ &mdash; ring</div>
+                      <div><span class="inline-block w-2.5 h-2.5 rounded-sm mr-1 align-middle" style="background:#86efac"></span>OH &mdash; hydroxyl</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-4 pt-1 slide-up">
-            <p class="mt-2 text-gray-300 text-lg">Morgan Fingerprints encode circular neighborhoods of atoms into bit-vectors that the MLP can actually "read." This bridges the gap between raw chemistry and machine learning.</p>
-            <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
-              "Each atom or bond in a SMILES string lights up a unique pattern in the bit grid."
+            <div class="col-span-5 text-left p-4 pt-1 slide-up">
+              <p class="mt-2 text-gray-300 text-lg">Morgan Fingerprints encode circular neighborhoods of atoms into bit-vectors that the MLP can actually "read." This bridges the gap between raw chemistry and machine learning.</p>
+              <ul class="mt-4 text-sm text-gray-300 space-y-2">
+                <li><strong>SMILES:</strong> Symbolic encoding of molecular structure (atoms, bonds, rings)</li>
+                <li><strong>Morgan FP:</strong> 1024-bit hash of atom neighborhoods (radius=2, diameter=4 bonds)</li>
+                <li><strong>Why 1024 bits?</strong> Sufficient hashing space for common organic chemistry</li>
+                <li><strong>Circular neighborhoods:</strong> Each bit captures local chemical context</li>
+              </ul>
+              <div class="mt-6 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
+                "Each atom or bond in a SMILES string lights up a unique pattern in the bit grid."
+              </div>
             </div>
-          </div>
         </div>
       </section>
       <!-- Slide 3: The Challenge (Class Imbalance, Dual-Pane) -->
@@ -202,15 +234,71 @@
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-4 pt-1 slide-up">
-            <p class="mt-2 text-gray-300 text-lg">A multilayer perceptron (MLP) learns to map molecular fingerprints to inhibition probability. Each layer transforms the representation, extracting higher-order features. Backpropagation enables the network to learn from errors and improve predictions.</p>
-            <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
-              "The MLP learns the hidden grammar of chemistry—one weight update at a time."
+            <div class="col-span-5 text-left p-4 pt-1 slide-up">
+              <p class="mt-2 text-gray-300 text-lg">A multilayer perceptron (MLP) learns to map molecular fingerprints to inhibition probability. Each layer transforms the representation, extracting higher-order features. Backpropagation enables the network to learn from errors and improve predictions.</p>
+              <ul class="mt-4 text-sm text-gray-300 space-y-2">
+                <li><strong>Input layer:</strong> 1024 bits (Morgan fingerprint)</li>
+                <li><strong>Hidden layers:</strong> 512 → 256 units with ReLU activation</li>
+                <li><strong>ReLU:</strong> $ \text{ReLU}(x) = \max(0, x) $ — enables non-linear learning</li>
+                <li><strong>Dropout(0.5):</strong> Randomly zeros 50% of activations during training to prevent overfitting</li>
+                <li><strong>Output:</strong> Single logit passed to sigmoid → probability [0, 1]</li>
+              </ul>
+              <div class="mt-6 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
+                "The MLP learns the hidden grammar of chemistry—one weight update at a time."
+              </div>
+              <div class="mt-4">
+                <div style="font-size:0.9em;">$$\mathbf{a}^{(l)} = \text{Dropout}(\sigma(\mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}))$$</div>
+              </div>
             </div>
-            <div class="mt-8">
-              <div class="katex">$$
-\mathbf{a}^{(l)} = \sigma(\mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)})
-$$</div>
+        </div>
+      </section>
+      <!-- Slide: MLP Interactive Details (Dropout & ReLU) -->
+      <section data-transition="fade">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">MLP: Interactive Details</h2>
+            <div class="secondary text-base mb-0">Explore Dropout and ReLU interactively</div>
+          </div>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="dropout">Dropout</button>
+                <button class="tab-btn" data-tab="relu">ReLU</button>
+              </div>
+              <div class="tab-panel w-full p-6" data-panel="dropout">
+                <div class="font-bold accent mb-2">Dropout Training Demo</div>
+                <div id="dropout-visual" style="min-height:220px;"></div>
+                <button id="dropout-randomize" class="mt-4 px-3 py-1 rounded bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 transition">Randomize Dropout</button>
+                <div class="text-xs text-gray-400 mt-2">Toggle nodes to see how dropout affects the network, but the output can still be reached!</div>
+              </div>
+              <div class="tab-panel w-full p-6" data-panel="relu" style="display:none">
+                <div class="font-bold accent mb-2">ReLU Function Demo</div>
+                <label for="relu-input" class="block mb-2">Weighted Sum Input:</label>
+                <input type="range" id="relu-input" min="-5" max="5" value="0" step="0.1" class="w-48 accent">
+                <span id="relu-input-value" class="ml-2 font-mono">0</span>
+                <div id="relu-visual" class="mt-4" style="min-height:60px;"></div>
+                <div class="text-xs text-gray-400 mt-2">Move the slider to see how ReLU collapses negative values to 0 and passes positive values through.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
+            <div class="mb-6">
+              <h3 class="accent font-bold mb-2">Dropout</h3>
+              <p class="text-gray-300 text-sm mb-2">Dropout randomly disables ("drops") a subset of neurons during training, forcing the network to learn redundant paths. This prevents overfitting and makes the model more robust.</p>
+              <ul class="text-xs text-gray-300 mb-4">
+                <li>Randomly zeroes 50% of activations during training</li>
+                <li>Forces network to not rely on any single path</li>
+                <li>At inference, all nodes are used (no dropout)</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="accent font-bold mb-2">ReLU</h3>
+              <p class="text-gray-300 text-sm mb-2">The ReLU (Rectified Linear Unit) activation function outputs zero for negative values and passes positive values unchanged. This enables non-linear learning and helps networks train faster.</p>
+              <ul class="text-xs text-gray-300">
+                <li>Formula: $\text{ReLU}(x) = \max(0, x)$</li>
+                <li>Collapses negative weighted sums to zero</li>
+                <li>Keeps positive signals intact</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -254,17 +342,23 @@ $$</div>
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-4 pt-1 slide-up">
-            <p class="mt-2 text-gray-300 text-lg">We force the model to care ~27x more about missing an Active compound. The penalty slider shows how the scale balances as we increase the weight for Actives.</p>
-            <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
-              "This engineering hack makes rare actives visible to the model."
+            <div class="col-span-5 text-left p-4 pt-1 slide-up">
+              <p class="mt-2 text-gray-300 text-lg">We force the model to care ~27x more about missing an Active compound. The penalty slider shows how the scale balances as we increase the weight for Actives.</p>
+              <ul class="mt-4 text-sm text-gray-300 space-y-2">
+                <li><strong>Binary Cross-Entropy (BCE):</strong> Standard loss for binary classification</li>
+                <li><strong>Weighted BCE:</strong> Applies weight $ w $ to positive class losses to handle imbalance</li>
+                <li><strong>pos_weight = 27:</strong> Rare actives matter 27× more than common inactives</li>
+                <li><strong>Effect:</strong> Model penalized heavily for false negatives (missed drugs)</li>
+                <li><strong>Trade-off:</strong> Higher false positive rate acceptable if it catches more true actives</li>
+              </ul>
+              <div class="mt-4 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
+                "This engineering hack makes rare actives visible to the model."
+              </div>
+              <div class="mt-4" style="font-size:0.85em;">
+                <div>$$\mathcal{L} = -[w \cdot y \log(\sigma(z)) + (1-y) \log(1-\sigma(z))]$$</div>
+                <div class="text-xs text-gray-400 mt-1">where $ z $ is logit, $ \sigma $ is sigmoid, $ w \approx 27 $</div>
+              </div>
             </div>
-            <div class="mt-8">
-              <div class="katex">$$
-\mathcal{L} = -[w \cdot y \log(\hat{y}) + (1-y) \log(1-\hat{y})]
-$$</div>
-            </div>
-          </div>
         </div>
       </section>
       <!-- Slide 6A: ROC Curve (Interactive) -->
@@ -385,17 +479,92 @@ $$</div>
         </div>
       </section>
       <!-- Slide 7: The Future (Full-bleed GNN + QR) -->
-      <section data-transition="fade">
-        <div style="position:relative;width:100%;height:100%;min-height:580px;">
-          <!-- Full-bleed GNN background -->
+        <!-- Slide 6D: Feature Importance (What the Model Learns) -->
+        <section data-transition="fade">
+          <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+            <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+              <h2 class="accent text-2xl font-bold leading-tight">Interpreting the "Black Box"</h2>
+              <div class="secondary text-base mb-0">Feature Importance: Which chemical bits matter most?</div>
+            </div>
+            <!-- Left: Card with Tabs -->
+            <div class="col-span-7 flex flex-col relative slide-up h-full">
+              <div class="card-clear w-full h-full flex flex-col items-center p-0">
+                <div class="flex gap-2 justify-center pt-3 pb-2">
+                  <button class="tab-btn tab-active" data-tab="fig8">Figure</button>
+                  <button class="tab-btn" data-tab="int8">Data</button>
+                </div>
+                <div class="tab-panel w-full p-6" data-panel="fig8">
+                  <div class="mt-4 flex flex-col items-center">
+                    <div class="font-bold accent mb-1">Top 20 Important Fingerprint Bits</div>
+                    <img src="./figures/07_feature_importance_permutation.png" alt="Feature Importance" 
+                      class="rounded-lg shadow-lg demo-img mb-2" style="max-height:300px;max-width:100%;object-fit:contain;">
+                    <div class="text-xs text-gray-400 mt-2">Permutation Importance on test set</div>
+                  </div>
+                </div>
+                <div class="tab-panel w-full p-6" data-panel="int8" style="display:none">
+                  <div class="font-semibold mb-3">Top 10 Critical Features</div>
+                  <div class="space-y-2 text-xs max-h-64 overflow-y-auto">
+                    <div class="flex justify-between p-2 bg-black/30 rounded">
+                      <span class="text-gray-300">Rank</span>
+                      <span class="text-gray-300">Bit ID</span>
+                      <span class="text-gray-300">Importance</span>
+                      <span class="text-gray-300">Prevalence</span>
+                    </div>
+                    <div class="flex justify-between p-2 border-l-2 border-[#A3BE8C]">
+                      <span>1</span><span class="font-mono">Bit 0142</span><span class="text-[#A3BE8C]">0.02145</span><span>47.3%</span>
+                    </div>
+                    <div class="flex justify-between p-2 border-l-2 border-[#A3BE8C]">
+                      <span>2</span><span class="font-mono">Bit 0213</span><span class="text-[#A3BE8C]">0.01892</span><span>52.1%</span>
+                    </div>
+                    <div class="flex justify-between p-2 border-l-2 border-[#A3BE8C]">
+                      <span>3</span><span class="font-mono">Bit 0356</span><span class="text-[#A3BE8C]">0.01743</span><span>38.9%</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2 font-italic">
+                      ✓ Can be reverse-engineered to chemical fragments<br>
+                      ✓ Cross-reference with known HIV inhibitors
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right: Narrative -->
+            <div class="col-span-5 text-left p-4 pt-1 slide-up">
+              <p class="mt-2 text-gray-300 text-lg">
+                The model doesn't just predict—it tells us <b>why</b>. By measuring how much accuracy drops when we shuffle each fingerprint bit, we identify the structural motifs the model learned.
+              </p>
+              <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
+                "High-importance bits = chemical patterns the model associates with HIV inhibition."
+              </div>
+              <div class="mt-8">
+                <div class="text-sm font-bold accent mb-2">What Validates These Results?</div>
+                <ul class="text-xs text-gray-300 space-y-1">
+                  <li class="flex items-start gap-2">
+                    <span class="text-[#2dd4bf] mt-1">▸</span>
+                    <span>Do top bits represent <b>pharmacophores</b> from literature?</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-[#2dd4bf] mt-1">▸</span>
+                    <span>Are common drug patterns (aromatic, amide, nitrogen) present?</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-[#2dd4bf] mt-1">▸</span>
+                    <span>Can chemists validate the patterns biochemically?</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section data-transition="fade" style="position:relative;z-index:1;">
+          <!-- Full-bleed GNN background (scoped to this slide only) -->
           <img src="./figures/graph_convolutions.webp" alt="Graph Neural Network"
-            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.18;border-radius:1rem;">
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.18;border-radius:1rem;z-index:0;pointer-events:none;">
           <!-- Pulsing ring overlay -->
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:1;">
             <div class="gnn-pulse"></div>
           </div>
           <!-- Content overlay -->
-          <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]" style="position:relative;z-index:2;">
+          <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]" style="position:relative;z-index:2;background:transparent;">
             <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
               <h2 class="accent text-2xl font-bold leading-tight">The Future: Next Steps</h2>
               <div class="secondary text-base mb-0">Graph Neural Networks &amp; Active Learning</div>
@@ -421,8 +590,74 @@ $$</div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        <!-- Slide 10: Thank You / Q&A -->
+        <section data-transition="fade">
+          <div class="flex flex-col items-center justify-center h-full min-h-[580px] py-16">
+            <h2 class="accent text-4xl font-bold mb-6">Thank You!</h2>
+            <div class="text-xl text-gray-300 mb-4">Questions? Discussion?</div>
+            <div class="flex flex-col items-center gap-4 mt-8">
+              <div class="text-base text-gray-400">Contact: <span class="text-[#2dd4bf]">kadinelbak@gmail.com</span></div>
+              <a href="https://github.com/kadinelbak/HIV-Proteases-Detector" target="_blank" class="text-[#2dd4bf] underline">GitHub: kadinelbak/HIV-Proteases-Detector</a>
+            </div>
+            <div class="mt-12">
+              <span class="text-xs text-gray-500">This research was made possible by open-source science and the support of the community.</span>
+            </div>
+          </div>
+        </section>
       </section>
+    </div>
+  </div>
+  <!-- Slide Figures Sidebar -->
+  <div id="fig-sidebar" class="fig-sidebar">
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle figures sidebar">
+      <span id="sidebar-chevron">‹</span>
+    </button>
+    <div class="sidebar-inner">
+      <div class="sidebar-header">Slide Figures</div>
+      <div class="sidebar-list">
+        <div class="sidebar-item" data-img="./figures/hiv_protease_3d.webp" data-title="HIV-1 Protease 3D">
+          <img src="./figures/hiv_protease_3d.webp" alt="HIV-1 Protease 3D" loading="lazy">
+          <span>HIV-1 Protease</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/02_sample_fingerprints.png" data-title="Morgan Fingerprints">
+          <img src="./figures/02_sample_fingerprints.png" alt="Morgan Fingerprints" loading="lazy">
+          <span>Fingerprints</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/01_class_distribution.png" data-title="Class Distribution">
+          <img src="./figures/01_class_distribution.png" alt="Class Distribution" loading="lazy">
+          <span>Class Balance</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/03_training_validation_loss.png" data-title="Training &amp; Validation Loss">
+          <img src="./figures/03_training_validation_loss.png" alt="Training Loss" loading="lazy">
+          <span>Training Loss</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/05_confusion_matrix.png" data-title="Confusion Matrix">
+          <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix" loading="lazy">
+          <span>Confusion Matrix</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/04_roc_curve.png" data-title="ROC Curve (AUROC = 0.7876)">
+          <img src="./figures/04_roc_curve.png" alt="ROC Curve" loading="lazy">
+          <span>ROC Curve</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/06_precision_recall_curve.png" data-title="Precision–Recall Curve (AP = 0.356)">
+          <img src="./figures/06_precision_recall_curve.png" alt="PR Curve" loading="lazy">
+          <span>PR Curve</span>
+        </div>
+        <div class="sidebar-item" data-img="./figures/07_ap_experiment_comparison.png" data-title="AP Experiment Comparison">
+          <img src="./figures/07_ap_experiment_comparison.png" alt="AP Comparison" loading="lazy">
+          <span>AP Comparison</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Figure pop-out overlay -->
+  <div id="fig-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.82);align-items:center;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">
+    <div style="position:relative;background:rgba(10,10,18,0.97);border:1px solid rgba(129,140,248,0.3);border-radius:1rem;padding:1.5rem 1.5rem 1rem;max-width:82vw;max-height:88vh;display:flex;flex-direction:column;align-items:center;">
+      <button id="overlay-close" style="position:absolute;top:0.5rem;right:0.75rem;background:none;border:none;color:#9ca3af;font-size:1.6rem;cursor:pointer;line-height:1;z-index:1;">&times;</button>
+      <img id="overlay-img" src="" alt="" style="max-height:68vh;max-width:75vw;object-fit:contain;border-radius:0.5rem;">
+      <div id="overlay-title" style="margin-top:0.75rem;font-size:0.85rem;color:#2dd4bf;font-weight:600;text-align:center;"></div>
     </div>
   </div>
   <!-- Reveal.js (local) -->

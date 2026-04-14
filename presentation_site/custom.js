@@ -16,101 +16,161 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   //  Reveal.js Init 
-  var deck = new Reveal({
-    hash: true,
-    slideNumber: false,
-    transition: 'fade',
-    backgroundTransition: 'slide',
-    width: 1280,
-    height: 720,
-    margin: 0.04,
-    minScale: 0.2,
-    maxScale: 1.5
-  });
-
-  deck.initialize().then(function () {
-    var idx = deck.getIndices().h;
-    console.log('[HIV] Reveal initialized OK — starting slide index =', idx);
-    updateStepper(idx);
-    setupTabs();
-    setupInteractivesForSlide(idx);
-    setBokehSlide(idx);
-  }).catch(function(err) {
-    console.error('[HIV] Reveal.initialize() failed:', err);
-  });
-
-  deck.on('slidechanged', function (event) {
-    console.log('[HIV] slidechanged → indexh =', event.indexh);
-    updateStepper(event.indexh);
-    setupTabs();
-    setupInteractivesForSlide(event.indexh);
-    setBokehSlide(event.indexh);
-  });
-
-  //  Stepper & Progress Bar 
-  function updateStepper(idx) {
-    var steps = document.querySelectorAll('.step');
-    console.log('[HIV] updateStepper(', idx, ') — steps found:', steps.length);
-    steps.forEach(function (el, i) {
-      el.classList.toggle('active', i === idx);
-    });
-    var bar = document.getElementById('global-progress');
-    console.log('[HIV] progress bar element:', bar ? 'found' : 'NOT FOUND');
-    if (bar && steps.length) {
-      bar.style.width = ((idx + 1) / steps.length * 100) + '%';
-    }
-  }
-
-  //  Tab Cards 
-  // Buttons: data-tab="panelId"  |  Panels: data-panel="panelId"
-  // Uses inline display style  avoids Tailwind/Reveal CSS conflicts
-  function setupTabs() {
-    var cards = document.querySelectorAll('.card');
-    console.log('[HIV] setupTabs() — .card elements found:', cards.length);
-    cards.forEach(function (card, ci) {
-      var tabs = card.querySelectorAll('.tab-btn');
-      console.log('[HIV]   card[' + ci + '] has', tabs.length, 'tab buttons');
-      tabs.forEach(function (tab) {
-        if (tab._tabReady) return;
-        tab._tabReady = true;
-        console.log('[HIV]   binding click to tab data-tab="' + tab.getAttribute('data-tab') + '"');
-        tab.addEventListener('click', function (e) {
-          e.stopPropagation();
-          tabs.forEach(function (t) { t.classList.remove('tab-active'); });
-          tab.classList.add('tab-active');
-          var target = tab.getAttribute('data-tab');
-          console.log('[HIV] tab clicked → target panel =', target);
-          card.querySelectorAll('.tab-panel').forEach(function (panel) {
-            var panelId = panel.getAttribute('data-panel');
-            var visible = panelId === target;
-            panel.style.display = visible ? '' : 'none';
-            console.log('[HIV]   panel[' + panelId + '] display =', visible ? 'visible' : 'hidden');
-          });
-          // Re-trigger interactives when switching to their interactive panel
-          if (target === 'int1') setupCostCounter();
-          if (target === 'int4') setupMLPDemo();
-          if (target === 'int5') setupWeightedScale();
-          // Chart.js slides don't use tabs but guard anyway
-          if (target === 'int6') setupROCChart();
-          if (target === 'int7') setupPRChart();
-          if (target === 'int8') setupAPChart();
-        });
-      });
-    });
-  }
-
-  //  Route Interactives by Slide Index 
   function setupInteractivesForSlide(idx) {
     console.log('[HIV] setupInteractivesForSlide(', idx, ')');
     if (idx === 0) setupCostCounter();
     if (idx === 1) setupBitGrid();
     if (idx === 2) setupRandomGuesser();
     if (idx === 3) setupMLPDemo();
-    if (idx === 4) setupWeightedScale();
-    if (idx === 5) setupROCChart();
-    if (idx === 6) setupPRChart();
-    if (idx === 7) setupAPChart();
+    if (idx === 4) setupDropoutDemo();
+    if (idx === 4) setupReLUDemo();
+    if (idx === 5) setupWeightedScale();
+    if (idx === 6) setupROCChart();
+    if (idx === 7) setupPRChart();
+    if (idx === 8) setupAPChart();
   }
+
+  var deck = new Reveal({
+    hash: true,
+    slideNumber: false,
+    transition: 'fade',
+    backgroundTransition: 'slide',
+  });
+
+  deck.initialize().then(function () {
+    initTabs();
+    initSidebar();
+    setBokehSlide(0);
+    setupInteractivesForSlide(0);
+    deck.on('slidechanged', function (event) {
+      var idx = event.indexh;
+      updateStepper(idx);
+      setBokehSlide(idx);
+      setupInteractivesForSlide(idx);
+    });
+  });
+
+  function updateStepper(idx) {
+    document.querySelectorAll('.step').forEach(function (s, i) {
+      s.classList.toggle('active', i === idx);
+      s.classList.toggle('done', i < idx);
+    });
+  }
+
+  function initTabs() {
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tab = btn.dataset.tab;
+        var card = btn.closest('.card-clear') || btn.closest('.card') || btn.parentElement;
+        if (!card) return;
+        card.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('tab-active'); });
+        card.querySelectorAll('.tab-panel').forEach(function (p) { p.style.display = 'none'; });
+        btn.classList.add('tab-active');
+        var panel = card.querySelector('[data-panel="' + tab + '"]');
+        if (panel) panel.style.display = '';
+      });
+    });
+  }
+
+  // ── Dropout Demo ──────────────────────────────────────────────────────────
+  function setupDropoutDemo() {
+      var container = document.getElementById('dropout-visual');
+      var btn = document.getElementById('dropout-randomize');
+      if (!container || !btn) return;
+      var layers = [4, 5, 3];
+      var nodes = [];
+      var dropout = Array(layers[1]).fill(false);
+      function render() {
+        container.innerHTML = '';
+        var w = 260, h = 160;
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', w);
+        svg.setAttribute('height', h);
+        // Node positions
+        nodes = layers.map((n, li) => Array.from({length: n}, (_, i) => ({
+          x: 40 + li * 90,
+          y: 30 + (h - 60) * i / (n - 1)
+        })));
+        // Draw connections
+        for (let i = 0; i < layers[0]; i++) {
+          for (let j = 0; j < layers[1]; j++) {
+            if (!dropout[j]) {
+              for (let k = 0; k < layers[2]; k++) {
+                let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', nodes[0][i].x);
+                line.setAttribute('y1', nodes[0][i].y);
+                line.setAttribute('x2', nodes[1][j].x);
+                line.setAttribute('y2', nodes[1][j].y);
+                line.setAttribute('stroke', '#818cf8');
+                line.setAttribute('stroke-width', '1.5');
+                svg.appendChild(line);
+                let line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line2.setAttribute('x1', nodes[1][j].x);
+                line2.setAttribute('y1', nodes[1][j].y);
+                line2.setAttribute('x2', nodes[2][k].x);
+                line2.setAttribute('y2', nodes[2][k].y);
+                line2.setAttribute('stroke', '#818cf8');
+                line2.setAttribute('stroke-width', '1.5');
+                svg.appendChild(line2);
+              }
+            }
+          }
+        }
+        // Draw nodes
+        nodes.forEach((layer, li) => {
+          layer.forEach((node, ni) => {
+            let circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circ.setAttribute('cx', node.x);
+            circ.setAttribute('cy', node.y);
+            circ.setAttribute('r', '13');
+            circ.setAttribute('stroke', '#2dd4bf');
+            circ.setAttribute('stroke-width', '2');
+            circ.setAttribute('fill', li === 1 && dropout[ni] ? '#ef4444' : '#18181b');
+            if (li === 1) {
+              circ.style.cursor = 'pointer';
+              circ.onclick = function () {
+                dropout[ni] = !dropout[ni];
+                render();
+              };
+            }
+            svg.appendChild(circ);
+          });
+        });
+        // Output highlight
+        nodes[2].forEach((node) => {
+          let outCirc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          outCirc.setAttribute('cx', node.x);
+          outCirc.setAttribute('cy', node.y);
+          outCirc.setAttribute('r', '8');
+          outCirc.setAttribute('fill', '#f59e0b');
+          outCirc.setAttribute('opacity', '0.7');
+          svg.appendChild(outCirc);
+        });
+        container.appendChild(svg);
+      }
+      btn.onclick = function () {
+        for (let i = 0; i < dropout.length; i++) dropout[i] = Math.random() < 0.5;
+        render();
+      };
+      render();
+    }
+
+    // Interactive ReLU Demo (always re-initializes)
+    function setupReLUDemo() {
+      var slider = document.getElementById('relu-input');
+      var valueSpan = document.getElementById('relu-input-value');
+      var visual = document.getElementById('relu-visual');
+      if (!slider || !valueSpan || !visual) return;
+      function update() {
+        var x = Number(slider.value);
+        valueSpan.textContent = x.toFixed(1);
+        var y = Math.max(0, x);
+        visual.innerHTML = '<svg width="120" height="50"><line x1="10" y1="40" x2="50" y2="40" stroke="#818cf8" stroke-width="2"/><circle cx="50" cy="40" r="7" fill="#2dd4bf"/><text x="50" y="35" text-anchor="middle" fill="#fff" font-size="11">' + x.toFixed(1) + '</text><line x1="50" y1="40" x2="90" y2="'+(40-y*7)+'" stroke="#f59e0b" stroke-width="2"/><circle cx="90" cy="'+(40-y*7)+'" r="7" fill="#f59e0b"/><text x="90" y="'+(35-y*7)+'" text-anchor="middle" fill="#fff" font-size="11">' + y.toFixed(1) + '</text></svg>';
+      }
+      slider.oninput = update;
+      update();
+    }
+
 
   // ─── Shared ROC/PR curve data (sampled to match actual model output) ─────────
   // ~20 representative points hand-digitised from the actual figures
@@ -311,6 +371,43 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ─── Slide Figures Sidebar ───────────────────────────────────────────────────
+  function initSidebar() {
+    var sidebar  = document.getElementById('fig-sidebar');
+    var toggle   = document.getElementById('sidebar-toggle');
+    var chevron  = document.getElementById('sidebar-chevron');
+    var overlay  = document.getElementById('fig-overlay');
+    var oImg     = document.getElementById('overlay-img');
+    var oTitle   = document.getElementById('overlay-title');
+    var closeBtn = document.getElementById('overlay-close');
+    if (!sidebar || !toggle) return;
+
+    toggle.addEventListener('click', function () {
+      var open = sidebar.classList.toggle('open');
+      chevron.textContent = open ? '›' : '‹';
+    });
+
+    document.querySelectorAll('.sidebar-item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        oImg.src           = item.dataset.img;
+        oTitle.textContent = item.dataset.title;
+        overlay.style.display = 'flex';
+      });
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () { overlay.style.display = 'none'; });
+    }
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) overlay.style.display = 'none';
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') overlay.style.display = 'none';
+    });
+  }
+
   //  Slide 0: Cost Savings Counter 
   function setupCostCounter() {
     var counter = document.getElementById('cost-counter');
@@ -327,43 +424,77 @@ window.addEventListener('DOMContentLoaded', function () {
     requestAnimationFrame(animate);
   }
 
-  //  Slide 1: SMILES Bit-Grid 
+  //  Slide 1: SMILES Bit-Grid (Morgan Fingerprint Decoder) 
   function setupBitGrid() {
     var grid = document.getElementById('bit-grid');
-    console.log('[HIV] setupBitGrid — #bit-grid:', grid ? 'found' : 'NOT FOUND');
-    if (!grid || grid._ready) { if (grid && grid._ready) console.log('[HIV] setupBitGrid — already initialized, skipping'); return; }
+    if (!grid || grid._ready) return;
     grid._ready = true;
+
+    // Build 32×32 = 1024 cells (folded view of the full 2048-bit fingerprint)
     grid.innerHTML = '';
     for (var i = 0; i < 1024; i++) {
       var cell = document.createElement('div');
-      cell.style.cssText = 'width:4px;height:4px;background:#23272f;border-radius:2px;';
-      cell.dataset.bit = i;
+      cell.style.cssText = 'background:#1a1a2e;border-radius:1px;';
+      cell.dataset.idx = i;
       grid.appendChild(cell);
     }
-    var smiles = document.getElementById('smiles-string');
-    console.log('[HIV] setupBitGrid — #smiles-string:', smiles ? 'found' : 'NOT FOUND');
-    if (!smiles) return;
-    smiles.querySelectorAll('[data-bit]').forEach(function (span) {
-      span.style.cursor = 'pointer';
-      span.style.padding = '0 2px';
-      span.style.borderRadius = '3px';
-      span.style.transition = 'background 0.15s';
-      span.addEventListener('mouseenter', function () {
-        span.style.background = '#818cf844';
-        var bit = Number(span.dataset.bit);
-        Array.from(grid.children).forEach(function (c, i) {
-          c.style.background = (i === bit) ? '#2dd4bf' : '#23272f';
-          c.style.boxShadow  = (i === bit) ? '0 0 6px #2dd4bf' : 'none';
+
+    function clearGrid() {
+      Array.from(grid.children).forEach(function (c) {
+        c.style.background = '#1a1a2e';
+        c.style.boxShadow  = 'none';
+      });
+    }
+
+    function lightBits(bits, color) {
+      clearGrid();
+      bits.forEach(function (bit) {
+        var cell = grid.querySelector('[data-idx="' + (bit % 1024) + '"]');
+        if (cell) {
+          cell.style.background = color;
+          cell.style.boxShadow  = '0 0 4px ' + color;
+        }
+      });
+    }
+
+    // Hover on each fragment → light its hashed bit positions
+    var smilesEl = document.getElementById('smiles-string');
+    if (smilesEl) {
+      smilesEl.querySelectorAll('.smiles-group').forEach(function (span) {
+        span.style.cursor       = 'pointer';
+        span.style.borderRadius = '3px';
+        span.style.padding      = '0 3px';
+        span.style.transition   = 'background 0.15s';
+        span.addEventListener('mouseenter', function () {
+          span.style.background = span.dataset.color + '33';
+          lightBits(span.dataset.bits.split(',').map(Number), span.dataset.color);
+        });
+        span.addEventListener('mouseleave', function () {
+          span.style.background = '';
+          clearGrid();
         });
       });
-      span.addEventListener('mouseleave', function () {
-        span.style.background = '';
-        Array.from(grid.children).forEach(function (c) {
-          c.style.background = '#23272f';
-          c.style.boxShadow  = 'none';
+    }
+
+    // "Show molecule" button → overlay all groups simultaneously
+    var showAllBtn = document.getElementById('show-all-bits');
+    if (showAllBtn) {
+      showAllBtn.onclick = function () {
+        clearGrid();
+        document.querySelectorAll('#smiles-string .smiles-group').forEach(function (span) {
+          span.dataset.bits.split(',').map(Number).forEach(function (bit) {
+            var cell = grid.querySelector('[data-idx="' + (bit % 1024) + '"]');
+            if (cell) {
+              cell.style.background = span.dataset.color;
+              cell.style.boxShadow  = '0 0 3px ' + span.dataset.color;
+            }
+          });
         });
-      });
-    });
+      };
+    }
+
+    var clearBtn = document.getElementById('clear-bits');
+    if (clearBtn) clearBtn.onclick = clearGrid;
   }
 
   //  Slide 2: Random Guesser 
