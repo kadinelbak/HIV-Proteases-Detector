@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI-Driven Drug Discovery: Predicting HIV-1 Protease Inhibition</title>
-  <!-- Reveal.js -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/theme/black.min.css" id="theme">
+  <!-- Reveal.js (local) -->
+  <link rel="stylesheet" href="./node_modules/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="./node_modules/reveal.js/dist/theme/black.css" id="theme">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- KaTeX -->
@@ -14,8 +14,6 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
     onload="renderMathInElement(document.body);"></script>
-  <!-- Framer Motion (Web) -->
-  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
   <link rel="stylesheet" href="./custom.css">
 </head>
 <body>
@@ -45,7 +43,7 @@
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig1">
                 <div id="hiv3d" class="w-full flex flex-col items-center justify-center mb-4">
-                  <img src="./figures/hiv_protease_3d.webp" alt="HIV-1 Protease 3D" class="rounded-xl shadow-2xl max-h-72 mb-2" style="background:#18181b;object-fit:contain;">
+                  <img src="./figures/hiv_protease_3d.webp" alt="HIV-1 Protease 3D" class="rounded-xl shadow-2xl demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
                   <div class="mt-2 text-xs text-gray-400">(High-fidelity render or animation here)</div>
                 </div>
               </div>
@@ -103,7 +101,7 @@
               <div class="tab-panel w-full p-6" data-panel="fig2">
                 <div class="mt-4 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Sample Fingerprint</div>
-                  <img src="./figures/02_sample_fingerprints.png" alt="Sample Fingerprint" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 180px;">
+                  <img src="./figures/02_sample_fingerprints.png" alt="Sample Fingerprint" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
               <div class="tab-panel w-full p-6" data-panel="int2" style="display:none">
@@ -143,7 +141,7 @@
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig3">
                 <div class="font-bold accent mb-3 text-xl">Class Distribution</div>
-                <img src="./figures/01_class_distribution.png" alt="Class Distribution" class="rounded-lg shadow-lg demo-img mb-4" style="max-width: 340px;">
+                <img src="./figures/01_class_distribution.png" alt="Class Distribution" class="rounded-lg shadow-lg demo-img mb-4" style="max-height:280px;max-width:100%;object-fit:contain;">
               </div>
               <div class="tab-panel w-full p-6" data-panel="int3" style="display:none">
                 <button id="random-guesser-btn" class="mt-2 px-4 py-2 rounded bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 transition">Random Guesser</button>
@@ -176,7 +174,7 @@
               <div class="tab-panel w-full p-6" data-panel="fig4">
                 <div class="mt-6 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Training/Validation Loss</div>
-                  <img src="./figures/03_training_validation_loss.png" alt="Training/Validation Loss" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 220px;">
+                  <img src="./figures/03_training_validation_loss.png" alt="Training/Validation Loss" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
               <div class="tab-panel w-full p-6" data-panel="int4" style="display:none">
@@ -221,7 +219,7 @@ $$</div>
               <div class="tab-panel w-full p-6" data-panel="fig5">
                 <div class="mt-6 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Confusion Matrix</div>
-                  <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 180px;">
+                  <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
               <div class="tab-panel w-full p-6" data-panel="int5" style="display:none">
@@ -261,12 +259,15 @@ $$</div>
       <!-- Slide 6A: ROC Curve (Dual-Pane) -->
       <section data-transition="fade">
         <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Interactive Only (none for this slide) -->
-          <div class="col-span-7 glass h-[500px] flex flex-col items-center justify-center relative slide-up"></div>
-          <!-- Right: Visuals & Narrative -->
+          <!-- Left: Figure Card -->
+          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
+            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
+              <div class="font-bold accent mb-3 text-xl">ROC Curve</div>
+              <img src="./figures/04_roc_curve.png" alt="ROC Curve" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+            </div>
+          </div>
+          <!-- Right: Narrative -->
           <div class="col-span-5 text-left p-6 slide-up">
-            <div class="font-bold accent mb-2">ROC Curve</div>
-            <img src="./figures/04_roc_curve.png" alt="ROC Curve (Presentation)" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
             <h2 class="accent text-3xl font-bold mb-2">ROC Curve: Separating Actives from Inactives</h2>
             <div class="secondary text-xl mb-4">High Area Under the ROC Curve (AUROC)</div>
             <p class="mt-2 text-gray-300 text-lg">The ROC curve shows the model's ability to distinguish actives from inactives across all thresholds. High AUROC means the model is good at ranking actives above inactives.</p>
@@ -277,12 +278,15 @@ $$</div>
       <!-- Slide 6B: PR Curve (Dual-Pane) -->
       <section data-transition="fade">
         <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Interactive Only (none for this slide) -->
-          <div class="col-span-7 glass h-[500px] flex flex-col items-center justify-center relative slide-up"></div>
-          <!-- Right: Visuals & Narrative -->
+          <!-- Left: Figure Card -->
+          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
+            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
+              <div class="font-bold accent mb-3 text-xl">Precision-Recall Curve</div>
+              <img src="./figures/06_precision_recall_curve.png" alt="PR Curve" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+            </div>
+          </div>
+          <!-- Right: Narrative -->
           <div class="col-span-5 text-left p-6 slide-up">
-            <div class="font-bold accent mb-2">PR Curve</div>
-            <img src="./figures/06_precision_recall_curve.png" alt="PR Curve" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
             <h2 class="accent text-3xl font-bold mb-2">PR Curve: Finding Rare Actives</h2>
             <div class="secondary text-xl mb-4">Precision-Recall for Imbalanced Data</div>
             <p class="mt-2 text-gray-300 text-lg">The PR curve is more informative for imbalanced datasets. High area under the PR curve (AUPRC) means the model finds rare actives without too many false positives.</p>
@@ -293,12 +297,15 @@ $$</div>
       <!-- Slide 6C: AP Experiment (Dual-Pane) -->
       <section data-transition="fade">
         <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Interactive Only (none for this slide) -->
-          <div class="col-span-7 glass h-[500px] flex flex-col items-center justify-center relative slide-up"></div>
-          <!-- Right: Visuals & Narrative -->
+          <!-- Left: Figure Card -->
+          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
+            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
+              <div class="font-bold accent mb-3 text-xl">AP Experiment Comparison</div>
+              <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+            </div>
+          </div>
+          <!-- Right: Narrative -->
           <div class="col-span-5 text-left p-6 slide-up">
-            <div class="font-bold accent mb-2">AP Experiment Comparison</div>
-            <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
             <h2 class="accent text-3xl font-bold mb-2">AP Experiment: Model Comparison</h2>
             <div class="secondary text-xl mb-4">Average Precision Across Models</div>
             <p class="mt-2 text-gray-300 text-lg">This experiment compares average precision (AP) across different models or settings, highlighting the best approach for identifying actives.</p>
@@ -312,7 +319,7 @@ $$</div>
           <div class="col-span-7 glass h-[400px] flex flex-col items-center justify-center relative slide-up">
             <div class="w-full flex flex-col items-center mb-8">
               <div class="font-semibold mb-2">What's Next?</div>
-              <img src="./figures/gnn_future.png" alt="Graph Neural Network" class="rounded-xl shadow-2xl max-h-64 mb-4" style="background:#18181b;object-fit:contain;">
+              <img src="./figures/graph_convolutions.webp" alt="Graph Neural Network" class="rounded-xl shadow-2xl demo-img mb-4" style="max-height:280px;max-width:100%;object-fit:contain;">
               <div class="mt-2 text-xs text-gray-400">(Graph Neural Networks & Active Learning)</div>
             </div>
           </div>
@@ -330,8 +337,8 @@ $$</div>
       </section>
     </div>
   </div>
-  <!-- Reveal.js -->
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.min.js"></script>
+  <!-- Reveal.js (local) -->
+  <script src="./node_modules/reveal.js/dist/reveal.js"></script>
   <script src="./custom.js"></script>
 </body>
 </html>

@@ -3,7 +3,17 @@
 
 'use strict';
 
+console.log('[HIV] custom.js loaded — DOMContentLoaded listener registered');
+console.log('[HIV] typeof Reveal =', typeof Reveal);
+
 window.addEventListener('DOMContentLoaded', function () {
+  console.log('[HIV] DOMContentLoaded fired');
+  console.log('[HIV] typeof Reveal at DOM ready =', typeof Reveal);
+
+  if (typeof Reveal === 'undefined') {
+    console.error('[HIV] FATAL: Reveal is not defined — CDN script may have failed to load. Check Network tab in DevTools.');
+    return;
+  }
 
   //  Reveal.js Init 
   var deck = new Reveal({
@@ -20,12 +30,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
   deck.initialize().then(function () {
     var idx = deck.getIndices().h;
+    console.log('[HIV] Reveal initialized OK — starting slide index =', idx);
     updateStepper(idx);
     setupTabs();
     setupInteractivesForSlide(idx);
+  }).catch(function(err) {
+    console.error('[HIV] Reveal.initialize() failed:', err);
   });
 
   deck.on('slidechanged', function (event) {
+    console.log('[HIV] slidechanged → indexh =', event.indexh);
     updateStepper(event.indexh);
     setupTabs();
     setupInteractivesForSlide(event.indexh);
@@ -34,11 +48,13 @@ window.addEventListener('DOMContentLoaded', function () {
   //  Stepper & Progress Bar 
   function updateStepper(idx) {
     var steps = document.querySelectorAll('.step');
+    console.log('[HIV] updateStepper(', idx, ') — steps found:', steps.length);
     steps.forEach(function (el, i) {
       el.classList.toggle('active', i === idx);
     });
     var bar = document.getElementById('global-progress');
-    if (bar ; steps.length) {
+    console.log('[HIV] progress bar element:', bar ? 'found' : 'NOT FOUND');
+    if (bar && steps.length) {
       bar.style.width = ((idx + 1) / steps.length * 100) + '%';
     }
   }
@@ -47,18 +63,26 @@ window.addEventListener('DOMContentLoaded', function () {
   // Buttons: data-tab="panelId"  |  Panels: data-panel="panelId"
   // Uses inline display style  avoids Tailwind/Reveal CSS conflicts
   function setupTabs() {
-    document.querySelectorAll('.card').forEach(function (card) {
+    var cards = document.querySelectorAll('.card');
+    console.log('[HIV] setupTabs() — .card elements found:', cards.length);
+    cards.forEach(function (card, ci) {
       var tabs = card.querySelectorAll('.tab-btn');
+      console.log('[HIV]   card[' + ci + '] has', tabs.length, 'tab buttons');
       tabs.forEach(function (tab) {
         if (tab._tabReady) return;
         tab._tabReady = true;
+        console.log('[HIV]   binding click to tab data-tab="' + tab.getAttribute('data-tab') + '"');
         tab.addEventListener('click', function (e) {
           e.stopPropagation();
           tabs.forEach(function (t) { t.classList.remove('tab-active'); });
           tab.classList.add('tab-active');
           var target = tab.getAttribute('data-tab');
+          console.log('[HIV] tab clicked → target panel =', target);
           card.querySelectorAll('.tab-panel').forEach(function (panel) {
-            panel.style.display = (panel.getAttribute('data-panel') === target) ? '' : 'none';
+            var panelId = panel.getAttribute('data-panel');
+            var visible = panelId === target;
+            panel.style.display = visible ? '' : 'none';
+            console.log('[HIV]   panel[' + panelId + '] display =', visible ? 'visible' : 'hidden');
           });
         });
       });
@@ -67,6 +91,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //  Route Interactives by Slide Index 
   function setupInteractivesForSlide(idx) {
+    console.log('[HIV] setupInteractivesForSlide(', idx, ')');
     if (idx === 0) setupCostCounter();
     if (idx === 1) setupBitGrid();
     if (idx === 2) setupRandomGuesser();
@@ -77,6 +102,7 @@ window.addEventListener('DOMContentLoaded', function () {
   //  Slide 0: Cost Savings Counter 
   function setupCostCounter() {
     var counter = document.getElementById('cost-counter');
+    console.log('[HIV] setupCostCounter — #cost-counter:', counter ? 'found' : 'NOT FOUND (element may be on hidden slide)');
     if (!counter) return;
     var start = 2000000, end = 12000, duration = 1800, startTime = null;
     function animate(ts) {
@@ -91,7 +117,8 @@ window.addEventListener('DOMContentLoaded', function () {
   //  Slide 1: SMILES Bit-Grid 
   function setupBitGrid() {
     var grid = document.getElementById('bit-grid');
-    if (!grid || grid._ready) return;
+    console.log('[HIV] setupBitGrid — #bit-grid:', grid ? 'found' : 'NOT FOUND');
+    if (!grid || grid._ready) { if (grid && grid._ready) console.log('[HIV] setupBitGrid — already initialized, skipping'); return; }
     grid._ready = true;
     grid.innerHTML = '';
     for (var i = 0; i < 1024; i++) {
@@ -101,6 +128,7 @@ window.addEventListener('DOMContentLoaded', function () {
       grid.appendChild(cell);
     }
     var smiles = document.getElementById('smiles-string');
+    console.log('[HIV] setupBitGrid — #smiles-string:', smiles ? 'found' : 'NOT FOUND');
     if (!smiles) return;
     smiles.querySelectorAll('[data-bit]').forEach(function (span) {
       span.style.cursor = 'pointer';
@@ -129,6 +157,8 @@ window.addEventListener('DOMContentLoaded', function () {
   function setupRandomGuesser() {
     var btn    = document.getElementById('random-guesser-btn');
     var result = document.getElementById('random-guesser-result');
+    console.log('[HIV] setupRandomGuesser — #random-guesser-btn:', btn ? 'found' : 'NOT FOUND');
+    console.log('[HIV] setupRandomGuesser — #random-guesser-result:', result ? 'found' : 'NOT FOUND');
     if (!btn || !result) return;
     result.style.display = 'none';
     btn.onclick = function () {
@@ -142,6 +172,9 @@ window.addEventListener('DOMContentLoaded', function () {
     var canvas  = document.getElementById('mlp-canvas');
     var fireBtn = document.getElementById('fire-signal');
     var backBtn = document.getElementById('fire-back');
+    console.log('[HIV] setupMLPDemo — #mlp-canvas:', canvas ? 'found' : 'NOT FOUND');
+    console.log('[HIV] setupMLPDemo — #fire-signal:', fireBtn ? 'found' : 'NOT FOUND');
+    console.log('[HIV] setupMLPDemo — #fire-back:', backBtn ? 'found' : 'NOT FOUND');
     if (!canvas || !fireBtn || !backBtn) return;
 
     var ctx    = canvas.getContext('2d');
@@ -200,7 +233,7 @@ window.addEventListener('DOMContentLoaded', function () {
     function runPulse(layerStart, dir, setter) {
       var l = layerStart, n = 0;
       function step() {
-        if (l >= 0 ; l < 3) {
+        if (l >= 0 && l < 3) {
           var nd = nodes[l][n % layers[l]];
           setter({ x: nd.x, y: nd.y });
           draw(); n++;
@@ -226,6 +259,9 @@ window.addEventListener('DOMContentLoaded', function () {
     var slider  = document.getElementById('scale-slider');
     var penalty = document.getElementById('scale-penalty');
     var svg     = document.getElementById('scale-svg');
+    console.log('[HIV] setupWeightedScale — #scale-slider:', slider ? 'found' : 'NOT FOUND');
+    console.log('[HIV] setupWeightedScale — #scale-penalty:', penalty ? 'found' : 'NOT FOUND');
+    console.log('[HIV] setupWeightedScale — #scale-svg:', svg ? 'found' : 'NOT FOUND');
     if (!slider || !penalty || !svg) return;
 
     function drawScale(w) {
