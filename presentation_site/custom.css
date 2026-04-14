@@ -1,3 +1,43 @@
+/* Card and Tabs for left pane */
+.card {
+  background: rgba(24, 24, 32, 0.85);
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 32px 0 rgba(0,0,0,0.18);
+  border: 2px solid #818cf8;
+  overflow: hidden;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: #818cf8;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s, color 0.2s;
+}
+.tab-btn.tab-active {
+  background: #2dd4bf;
+  color: #18181b;
+  border-bottom: 2px solid #2dd4bf;
+  z-index: 2;
+}
+.tab-content {
+  min-height: 260px;
+  transition: opacity 0.2s;
+}
+/* Slide-up animation for dual-pane content blocks */
+.slide-up {
+  opacity: 0;
+  transform: translateY(32px);
+  animation: slideUp 0.8s cubic-bezier(.4,0,.2,1) forwards;
+  animation-delay: 0.2s;
+}
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* Reveal.js, Tailwind, KaTeX, and Framer Motion are loaded via CDN in index.html. This file contains all custom styles for the presentation. */
 
 body {
