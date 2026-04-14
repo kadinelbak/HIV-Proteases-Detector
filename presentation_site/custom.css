@@ -1,36 +1,98 @@
 /* Card and Tabs for left pane */
 .card {
-  background: rgba(24, 24, 32, 0.85);
-  border-radius: 1.5rem;
-  box-shadow: 0 6px 32px 0 rgba(0,0,0,0.18);
-  border: 2px solid #818cf8;
+  background: rgba(18, 18, 26, 0.92);
+  border-radius: 1.25rem;
+  box-shadow: 0 0 0 1px rgba(129,140,248,0.25), 0 8px 40px 0 rgba(0,0,0,0.32);
+  border: 1px solid rgba(129,140,248,0.3);
   overflow: hidden;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card:hover {
+  box-shadow: 0 0 0 1.5px rgba(45,212,191,0.5), 0 0 32px rgba(45,212,191,0.12), 0 8px 40px rgba(0,0,0,0.35);
+  border-color: rgba(45,212,191,0.4);
+}
+/* Completely transparent left-pane display area */
+.card-clear {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0;
+  overflow: visible !important;
+}
+.card-clear:hover {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.card-clear .tab-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.card-clear .tab-panel .demo-img {
+  max-height: 440px !important;
+}
+/* Slide grids: title row auto, content row fills remaining height */
+section[data-transition="fade"] > .grid,
+section[data-transition="fade"] > div > .grid {
+  grid-template-rows: auto 1fr !important;
+  align-items: stretch !important;
 }
 .tab-btn {
   background: none;
-  border: none;
+  border-radius: 9999px;
+  border: 1px solid rgba(129,140,248,0.4);
   outline: none;
   color: #818cf8;
   cursor: pointer;
-  font-size: 1.1rem;
-  transition: background 0.2s, color 0.2s;
+  font-size: 0.78rem;
+  padding: 0.22rem 1rem;
+  letter-spacing: 0.03em;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.tab-btn:hover:not(.tab-active) {
+  background: rgba(129,140,248,0.12);
 }
 .tab-btn.tab-active {
-  background: #2dd4bf;
-  color: #18181b;
-  border-bottom: 2px solid #2dd4bf;
-  z-index: 2;
+  background: rgba(45,212,191,0.12);
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+  font-weight: 600;
 }
 .tab-content {
-  min-height: 260px;
+  min-height: 240px;
   transition: opacity 0.2s;
+}
+/* Demo images — CSS class controls sizing; !important overrides inline max-height */
+.demo-img {
+  max-height: 370px !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+}
+/* Centered, responsive slide titles */
+.col-span-12.slide-up {
+  text-align: center;
+}
+.col-span-12.slide-up h2 {
+  font-size: clamp(0.78rem, 1.7vw, 1.25rem) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.col-span-12.slide-up .secondary {
+  font-size: clamp(0.62rem, 1vw, 0.82rem) !important;
 }
 /* Slide-up animation for dual-pane content blocks */
 .slide-up {
   opacity: 0;
-  transform: translateY(32px);
-  animation: slideUp 0.8s cubic-bezier(.4,0,.2,1) forwards;
-  animation-delay: 0.2s;
+  transform: translateY(24px);
+  animation: slideUp 0.65s cubic-bezier(.4,0,.2,1) forwards;
+  animation-delay: 0.1s;
 }
 @keyframes slideUp {
   to {
@@ -38,12 +100,12 @@
     transform: translateY(0);
   }
 }
-/* Reveal.js, Tailwind, KaTeX, and Framer Motion are loaded via CDN in index.html. This file contains all custom styles for the presentation. */
 
 body {
   background: #0a0a0a;
   color: #e5e7eb;
-  font-family: 'Geist Sans', 'Inter', 'Roboto', sans-serif;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 .accent {
   color: #2dd4bf;
@@ -52,12 +114,13 @@ body {
   color: #818cf8;
 }
 .glass {
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(129,140,248,0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 1px rgba(129,140,248,0.08), 0 4px 32px 0 rgba(0,0,0,0.18);
   border-radius: 1.25rem;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 .progress-bar {
   position: fixed;
@@ -134,15 +197,25 @@ body {
   animation-delay: 0.2s;
 }
 @keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 .reveal-zoom {
   animation: zoomIn 0.7s cubic-bezier(.4,0,.2,1);
 }
 @keyframes zoomIn {
   from { transform: scale(0.92); opacity: 0.2; }
-  to { transform: scale(1); opacity: 1; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* GNN pulse ring on Future slide */
+.gnn-pulse {
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  border: 2px solid rgba(45,212,191,0.35);
+  animation: gnnPulse 3.2s ease-in-out infinite;
+}
+@keyframes gnnPulse {
+  0%   { transform: scale(0.85); opacity: 0.6; box-shadow: 0 0 0 0 rgba(45,212,191,0.25); }
+  50%  { transform: scale(1.08); opacity: 0.2; box-shadow: 0 0 60px 20px rgba(45,212,191,0.08); }
+  100% { transform: scale(0.85); opacity: 0.6; box-shadow: 0 0 0 0 rgba(45,212,191,0.25); }
 }

@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="./custom.css">
 </head>
 <body>
+  <canvas id="bokeh-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></canvas>
   <div class="progress-bar" id="global-progress"></div>
   <div class="stepper" id="progress-stepper">
     <div class="step" id="step-1">1</div>
@@ -33,13 +34,17 @@
     <div class="slides max-w-screen-lg mx-auto flex flex-col justify-center items-center" style="min-height: 90vh;">
       <!-- Slide 1: The Vision (Dual-Pane) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">AI-Driven Drug Discovery</h2>
+            <div class="secondary text-base mb-0">Reducing HIV research cycles from years to milliseconds.</div>
+          </div>
           <!-- Left: Card with Tabs -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-0">
-              <div class="flex w-full border-b border-[#818cf8]">
-                <button class="tab-btn tab-active flex-1 py-2 font-bold" data-tab="fig1">Figure</button>
-                <button class="tab-btn flex-1 py-2 font-bold" data-tab="int1">Interactive</button>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig1">Figure</button>
+                <button class="tab-btn" data-tab="int1">Interactive</button>
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig1">
                 <div id="hiv3d" class="w-full flex flex-col items-center justify-center mb-4">
@@ -67,9 +72,7 @@
             </div>
           </div>
           <!-- Right: Narrative -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">AI-Driven Drug Discovery</h2>
-            <div class="secondary text-xl mb-4">Reducing HIV research cycles from years to milliseconds.</div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">Harnessing computational screening to revolutionize drug discovery—dramatically reducing wet-lab costs and accelerating the identification of novel HIV-1 protease inhibitors.</p>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "Every dollar saved here is a day closer to a cure."
@@ -77,12 +80,12 @@
             <div class="mt-8">
               <div class="accent text-xl font-bold mb-2">Agenda</div>
               <ol class="list-decimal ml-6 text-base">
-                <li>The Vision: Why Computational Screening?</li>
-                <li>The Bridge: Featurizing Molecules</li>
-                <li>The Brain: Deep Learning Theory</li>
-                <li>The Build: Tackling Imbalance</li>
-                <li>The Breakthrough: Results & Impact</li>
-                <li>The Future: Next Steps</li>
+                <li class="fragment">The Vision: Why Computational Screening?</li>
+                <li class="fragment">The Bridge: Featurizing Molecules</li>
+                <li class="fragment">The Brain: Deep Learning Theory</li>
+                <li class="fragment">The Build: Tackling Imbalance</li>
+                <li class="fragment">The Breakthrough: Results &amp; Impact</li>
+                <li class="fragment">The Future: Next Steps</li>
               </ol>
             </div>
           </div>
@@ -90,13 +93,17 @@
       </section>
       <!-- Slide 2: The Bridge (Featurization, Dual-Pane) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">Numeralizing Chemistry</h2>
+            <div class="secondary text-base mb-0">Morgan Fingerprints: From Atoms to Bit-Vectors</div>
+          </div>
           <!-- Left: Card with Tabs -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-0">
-              <div class="flex w-full border-b border-[#818cf8]">
-                <button class="tab-btn tab-active flex-1 py-2 font-bold" data-tab="fig2">Figure</button>
-                <button class="tab-btn flex-1 py-2 font-bold" data-tab="int2">Interactive</button>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig2">Figure</button>
+                <button class="tab-btn" data-tab="int2">Interactive</button>
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig2">
                 <div class="mt-4 flex flex-col items-center">
@@ -119,9 +126,7 @@
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">Numeralizing Chemistry</h2>
-            <div class="secondary text-xl mb-4">Morgan Fingerprints: From Atoms to Bit-Vectors</div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">Morgan Fingerprints encode circular neighborhoods of atoms into bit-vectors that the MLP can actually "read." This bridges the gap between raw chemistry and machine learning.</p>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "Each atom or bond in a SMILES string lights up a unique pattern in the bit grid."
@@ -131,13 +136,17 @@
       </section>
       <!-- Slide 3: The Challenge (Class Imbalance, Dual-Pane) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">The &ldquo;Needle in the Haystack&rdquo; Problem</h2>
+            <div class="secondary text-base mb-0">Standard accuracy is a lie here.</div>
+          </div>
           <!-- Left: Card with Tabs -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-0">
-              <div class="flex w-full border-b border-[#818cf8]">
-                <button class="tab-btn tab-active flex-1 py-2 font-bold" data-tab="fig3">Figure</button>
-                <button class="tab-btn flex-1 py-2 font-bold" data-tab="int3">Interactive</button>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig3">Figure</button>
+                <button class="tab-btn" data-tab="int3">Interactive</button>
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig3">
                 <div class="font-bold accent mb-3 text-xl">Class Distribution</div>
@@ -145,15 +154,13 @@
               </div>
               <div class="tab-panel w-full p-6" data-panel="int3" style="display:none">
                 <button id="random-guesser-btn" class="mt-2 px-4 py-2 rounded bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 transition">Random Guesser</button>
-                <div id="random-guesser-result" class="mt-4 text-lg text-yellow-400 font-mono hidden"></div>
+                <div id="random-guesser-result" class="mt-4 text-lg text-yellow-400 font-mono" style="display:none"></div>
                 <div class="mt-2 text-xs text-gray-400">Click to see why accuracy is misleading!</div>
               </div>
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">The "Needle in the Haystack" Problem</h2>
-            <div class="secondary text-xl mb-4">Standard accuracy is a lie here.</div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">The dataset is <b>highly imbalanced</b>: 3.5% Active, 96.5% Inactive. A model that always predicts "Inactive" gets 96.5% accuracy—but finds zero drugs. We need specialized loss functions.</p>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "If you always guess 'Inactive', you win the accuracy game but lose the drug discovery race."
@@ -163,13 +170,17 @@
       </section>
       <!-- Slide 4: The Brain (MLP, Dual-Pane) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">Learning the Chemical Grammar</h2>
+            <div class="secondary text-base mb-0">A Deep MLP with ReLU &amp; Dropout</div>
+          </div>
           <!-- Left: Card with Tabs -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-0">
-              <div class="flex w-full border-b border-[#818cf8]">
-                <button class="tab-btn tab-active flex-1 py-2 font-bold" data-tab="fig4">Figure</button>
-                <button class="tab-btn flex-1 py-2 font-bold" data-tab="int4">Interactive</button>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig4">Figure</button>
+                <button class="tab-btn" data-tab="int4">Interactive</button>
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig4">
                 <div class="mt-6 flex flex-col items-center">
@@ -191,9 +202,7 @@
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">Learning the Chemical Grammar</h2>
-            <div class="secondary text-xl mb-4">A Deep MLP with ReLU & Dropout</div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">A multilayer perceptron (MLP) learns to map molecular fingerprints to inhibition probability. Each layer transforms the representation, extracting higher-order features. Backpropagation enables the network to learn from errors and improve predictions.</p>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "The MLP learns the hidden grammar of chemistry—one weight update at a time."
@@ -208,13 +217,17 @@ $$</div>
       </section>
       <!-- Slide 5: The Build (Weighted Loss, Dual-Pane) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
+        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">Balancing the Scales</h2>
+            <div class="secondary text-base mb-0">Weighted Binary Cross-Entropy Loss</div>
+          </div>
           <!-- Left: Card with Tabs -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-0">
-              <div class="flex w-full border-b border-[#818cf8]">
-                <button class="tab-btn tab-active flex-1 py-2 font-bold" data-tab="fig5">Figure</button>
-                <button class="tab-btn flex-1 py-2 font-bold" data-tab="int5">Interactive</button>
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig5">Figure</button>
+                <button class="tab-btn" data-tab="int5">Interactive</button>
               </div>
               <div class="tab-panel w-full p-6" data-panel="fig5">
                 <div class="mt-6 flex flex-col items-center">
@@ -225,9 +238,9 @@ $$</div>
               <div class="tab-panel w-full p-6" data-panel="int5" style="display:none">
                 <div class="font-semibold mb-2">Weighted Scale Demo</div>
                 <div class="flex flex-col items-center gap-4">
-                  <div id="scale-visual" style="position:relative;width:220px;height:120px;">
+                  <div id="scale-visual" style="position:relative;width:220px;height:130px;">
                     <!-- Animated scale will be rendered here -->
-                    <svg id="scale-svg" width="220" height="120" style="display:block;margin:auto;"></svg>
+                    <svg id="scale-svg" width="220" height="130" style="display:block;margin:auto;"></svg>
                   </div>
                   <input type="range" min="1" max="40" value="27" id="scale-slider" class="w-48 mt-2 accent">
                   <div class="flex gap-4 mt-2">
@@ -241,9 +254,7 @@ $$</div>
             </div>
           </div>
           <!-- Right: Narrative Only -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">Balancing the Scales</h2>
-            <div class="secondary text-xl mb-4">Weighted Binary Cross-Entropy Loss</div>
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">We force the model to care ~27x more about missing an Active compound. The penalty slider shows how the scale balances as we increase the weight for Actives.</p>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "This engineering hack makes rare actives visible to the model."
@@ -256,81 +267,158 @@ $$</div>
           </div>
         </div>
       </section>
-      <!-- Slide 6A: ROC Curve (Dual-Pane) -->
+      <!-- Slide 6A: ROC Curve (Interactive) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Figure Card -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
-              <div class="font-bold accent mb-3 text-xl">ROC Curve</div>
-              <img src="./figures/04_roc_curve.png" alt="ROC Curve" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+        <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">ROC Curve: Separating Actives from Inactives</h2>
+            <div class="secondary text-base mb-0">AUROC = 0.7876 &mdash; drag the threshold slider to explore the trade-off</div>
+          </div>
+          <!-- Left: Card with Tabs -->
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig6">Figure</button>
+                <button class="tab-btn" data-tab="int6">Interactive</button>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="fig6">
+                <div class="flex flex-col items-center">
+                  <img src="./figures/04_roc_curve.png" alt="ROC Curve" class="rounded-lg shadow-lg demo-img" style="max-height:360px;max-width:100%;object-fit:contain;">
+                </div>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="int6" style="display:none">
+                <canvas id="roc-chart" height="200"></canvas>
+                <div class="flex items-center gap-3 mt-3 px-2">
+                  <span class="text-xs text-gray-400 w-20">Threshold</span>
+                  <input type="range" id="roc-slider" min="0" max="100" value="30" class="flex-1">
+                  <span id="roc-thresh-label" class="text-xs text-[#2dd4bf] w-10 text-right">0.30</span>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Right: Narrative -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">ROC Curve: Separating Actives from Inactives</h2>
-            <div class="secondary text-xl mb-4">High Area Under the ROC Curve (AUROC)</div>
-            <p class="mt-2 text-gray-300 text-lg">The ROC curve shows the model's ability to distinguish actives from inactives across all thresholds. High AUROC means the model is good at ranking actives above inactives.</p>
+          <!-- Right: Live Readout -->
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
+            <p class="text-gray-300 text-base mb-4">Drag the threshold — watch how sensitivity (TPR) trades off against false alarms (FPR). For drug discovery, we prefer high recall even at the cost of more false positives.</p>
+            <div class="card p-4 text-sm font-mono space-y-2" id="roc-readout">
+              <div>TPR (Sensitivity): <span id="roc-tpr" class="text-[#2dd4bf] font-bold">—</span></div>
+              <div>FPR (False Alarm):  <span id="roc-fpr" class="text-red-400 font-bold">—</span></div>
+              <div class="border-t border-white/10 pt-2">Est. Actives found (411 total): <span id="roc-tp" class="text-green-400 font-bold">—</span></div>
+              <div>Est. False positives flagged: <span id="roc-fp" class="text-orange-400 font-bold">—</span></div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 6B: PR Curve (Dual-Pane) -->
+      <!-- Slide 6B: PR Curve (Interactive) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Figure Card -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
-              <div class="font-bold accent mb-3 text-xl">Precision-Recall Curve</div>
-              <img src="./figures/06_precision_recall_curve.png" alt="PR Curve" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+        <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">PR Curve: Finding Rare Actives</h2>
+            <div class="secondary text-base mb-0">AP = 0.356 &mdash; same threshold slider, different lens on model performance</div>
+          </div>
+          <!-- Left: Card with Tabs -->
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig7">Figure</button>
+                <button class="tab-btn" data-tab="int7">Interactive</button>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="fig7">
+                <div class="flex flex-col items-center">
+                  <img src="./figures/06_precision_recall_curve.png" alt="Precision-Recall Curve" class="rounded-lg shadow-lg demo-img" style="max-height:360px;max-width:100%;object-fit:contain;">
+                </div>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="int7" style="display:none">
+                <canvas id="pr-chart" height="200"></canvas>
+                <div class="flex items-center gap-3 mt-3 px-2">
+                  <span class="text-xs text-gray-400 w-20">Threshold</span>
+                  <input type="range" id="pr-slider" min="0" max="100" value="30" class="flex-1">
+                  <span id="pr-thresh-label" class="text-xs text-[#818cf8] w-10 text-right">0.30</span>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Right: Narrative -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">PR Curve: Finding Rare Actives</h2>
-            <div class="secondary text-xl mb-4">Precision-Recall for Imbalanced Data</div>
-            <p class="mt-2 text-gray-300 text-lg">The PR curve is more informative for imbalanced datasets. High area under the PR curve (AUPRC) means the model finds rare actives without too many false positives.</p>
+          <!-- Right: Live Readout -->
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
+            <p class="text-gray-300 text-base mb-4">The PR curve is critical for imbalanced data where positives are rare. High precision means fewer false alarms; high recall means fewer missed drugs. The threshold controls this trade-off directly.</p>
+            <div class="card p-4 text-sm font-mono space-y-2" id="pr-readout">
+              <div>Precision: <span id="pr-precision" class="text-[#818cf8] font-bold">—</span></div>
+              <div>Recall:    <span id="pr-recall" class="text-[#2dd4bf] font-bold">—</span></div>
+              <div class="border-t border-white/10 pt-2">F1 Score: <span id="pr-f1" class="text-yellow-400 font-bold">—</span></div>
+              <div class="text-xs text-gray-500 pt-1">Random baseline precision: 0.035</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Slide 6C: AP Experiment (Dual-Pane) -->
+      <!-- Slide 6C: AP Experiment (Interactive Bar Chart) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Figure Card -->
-          <div class="col-span-7 flex flex-col items-center justify-center relative slide-up">
-            <div class="card glass w-full max-w-xl mx-auto flex flex-col items-center justify-center p-6">
-              <div class="font-bold accent mb-3 text-xl">AP Experiment Comparison</div>
-              <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
+        <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]">
+          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+            <h2 class="accent text-2xl font-bold leading-tight">AP Experiment: Model Comparison</h2>
+            <div class="secondary text-base mb-0">Click a bar to see what changed in that experiment</div>
+          </div>
+          <!-- Left: Card with Tabs -->
+          <div class="col-span-7 flex flex-col relative slide-up h-full">
+            <div class="card-clear w-full h-full flex flex-col items-center p-0">
+              <div class="flex gap-2 justify-center pt-3 pb-2">
+                <button class="tab-btn tab-active" data-tab="fig8">Figure</button>
+                <button class="tab-btn" data-tab="int8">Interactive</button>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="fig8">
+                <div class="flex flex-col items-center">
+                  <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison" class="rounded-lg shadow-lg demo-img" style="max-height:360px;max-width:100%;object-fit:contain;">
+                </div>
+              </div>
+              <div class="tab-panel w-full p-4" data-panel="int8" style="display:none">
+                <canvas id="ap-chart" height="200"></canvas>
+              </div>
             </div>
           </div>
-          <!-- Right: Narrative -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">AP Experiment: Model Comparison</h2>
-            <div class="secondary text-xl mb-4">Average Precision Across Models</div>
-            <p class="mt-2 text-gray-300 text-lg">This experiment compares average precision (AP) across different models or settings, highlighting the best approach for identifying actives.</p>
+          <!-- Right: Model Detail -->
+          <div class="col-span-5 text-left p-4 pt-1 slide-up">
+            <p class="text-gray-300 text-base mb-3">Each bar represents a different hyperparameter configuration. Click any bar to learn what changed and why it affected Average Precision.</p>
+            <div class="card p-4" id="ap-detail">
+              <div class="text-xs text-gray-500 italic">Click a bar to see details</div>
+            </div>
           </div>
         </div>
       </section>
-      <!-- Slide 7: The Future (Dual-Pane) -->
+      <!-- Slide 7: The Future (Full-bleed GNN + QR) -->
       <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-center h-full min-h-[600px]">
-          <!-- Left: Visuals (placeholder for future directions) -->
-          <div class="col-span-7 glass h-[400px] flex flex-col items-center justify-center relative slide-up">
-            <div class="w-full flex flex-col items-center mb-8">
-              <div class="font-semibold mb-2">What's Next?</div>
-              <img src="./figures/graph_convolutions.webp" alt="Graph Neural Network" class="rounded-xl shadow-2xl demo-img mb-4" style="max-height:280px;max-width:100%;object-fit:contain;">
-              <div class="mt-2 text-xs text-gray-400">(Graph Neural Networks & Active Learning)</div>
-            </div>
+        <div style="position:relative;width:100%;height:100%;min-height:580px;">
+          <!-- Full-bleed GNN background -->
+          <img src="./figures/graph_convolutions.webp" alt="Graph Neural Network"
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.18;border-radius:1rem;">
+          <!-- Pulsing ring overlay -->
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+            <div class="gnn-pulse"></div>
           </div>
-          <!-- Right: Narrative -->
-          <div class="col-span-5 text-left p-6 slide-up">
-            <h2 class="accent text-3xl font-bold mb-2">The Future: Next Steps</h2>
-            <div class="secondary text-xl mb-4">Graph Neural Networks & Active Learning</div>
-            <p class="mt-2 text-gray-300 text-lg">This project demonstrates the transformative potential of deep learning for molecular property prediction. Next: explore Graph Neural Networks for richer molecular representations and integrate active learning for iterative improvement.</p>
-            <div class="mt-8 flex gap-6">
-              <a href="https://github.com/your-repo" class="accent underline text-lg" target="_blank">GitHub Repo</a>
-              <a href="../notebooks/hiv_classification_project.ipynb" class="secondary underline text-lg" target="_blank">Project Notebook</a>
+          <!-- Content overlay -->
+          <div class="grid grid-cols-12 gap-6 items-start h-full min-h-[580px]" style="position:relative;z-index:2;">
+            <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
+              <h2 class="accent text-2xl font-bold leading-tight">The Future: Next Steps</h2>
+              <div class="secondary text-base mb-0">Graph Neural Networks &amp; Active Learning</div>
+            </div>
+            <!-- Left: empty spacer (GNN is background) -->
+            <div class="col-span-7"></div>
+            <!-- Right: Glass morphism text box + QR -->
+            <div class="col-span-5 p-4 pt-1 slide-up">
+              <div class="card p-5">
+                <p class="text-gray-200 text-base mb-4">This project demonstrates the transformative potential of deep learning for molecular property prediction. Next steps: Graph Neural Networks for richer 3D molecular representations, and active learning for iterative wet-lab feedback loops.</p>
+                <ul class="text-sm text-gray-300 space-y-1 mb-4">
+                  <li class="flex items-center gap-2"><span class="text-[#2dd4bf]">&#x25B6;</span> GNN: atoms as nodes, bonds as edges</li>
+                  <li class="flex items-center gap-2"><span class="text-[#818cf8]">&#x25B6;</span> Active learning: model picks next compound to test</li>
+                  <li class="flex items-center gap-2"><span class="text-[#2dd4bf]">&#x25B6;</span> Interpretability: which substructures matter?</li>
+                </ul>
+                <div class="flex items-center gap-4 border-t border-white/10 pt-3">
+                  <img src="./figures/github_qr.png" alt="GitHub QR Code" style="width:80px;height:80px;border-radius:0.5rem;border:1px solid rgba(45,212,191,0.4);">
+                  <div>
+                    <div class="text-xs text-gray-400 mb-1">My GitHub</div>
+                    <div class="text-xs text-[#2dd4bf] font-mono">kadinelbak/HIV-Proteases-Detector</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -339,6 +427,8 @@ $$</div>
   </div>
   <!-- Reveal.js (local) -->
   <script src="./node_modules/reveal.js/dist/reveal.js"></script>
+  <!-- Chart.js (local) -->
+  <script src="./node_modules/chart.js/dist/chart.umd.min.js"></script>
   <script src="./custom.js"></script>
 </body>
 </html>
