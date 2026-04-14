@@ -1,0 +1,49 @@
+{
+  "test_loss": 3.38992,
+  "roc_auc": 0.787613,
+  "pr_auc": 0.356146,
+  "precision_at_0.5": 0.384106,
+  "recall_at_0.5": 0.402778,
+  "f1_at_0.5": 0.39322,
+  "balanced_accuracy_at_0.5": 0.68967,
+  "mcc_at_0.5": 0.37077,
+  "confusion_matrix": {
+    "TN": 3875,
+    "FP": 93,
+    "FN": 86,
+    "TP": 58
+  },
+  "figure_exports": {
+    "class_distribution": "results\\presentation_figures\\01_class_distribution.png",
+    "sample_fingerprints": "results\\presentation_figures\\02_sample_fingerprints.png",
+    "training_validation_loss": "results\\presentation_figures\\03_training_validation_loss.png",
+    "roc_curve": "results\\presentation_figures\\04_roc_curve.png",
+    "confusion_matrix": "results\\presentation_figures\\05_confusion_matrix.png",
+    "precision_recall_curve": "results\\presentation_figures\\06_precision_recall_curve.png"
+  },
+  "config": {
+    "seed": 42,
+    "device": "auto",
+    "data": {
+      "fingerprint_bits": 1024,
+      "fingerprint_radius": 2,
+      "train_ratio": 0.8,
+      "val_ratio": 0.1,
+      "test_ratio": 0.1,
+      "batch_size_train": 256,
+      "batch_size_eval": 512,
+      "num_workers": 2
+    },
+    "model": {
+      "input_dim": 1024,
+      "hidden_dim_1": 512,
+      "hidden_dim_2": 256,
+      "dropout": 0.5
+    },
+    "training": {
+      "epochs": 50,
+      "learning_rate": 0.001
+    },
+    "results_dir": "results"
+  }
+}

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI-Driven Drug Discovery: Predicting HIV-1 Protease Inhibition</title>
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/theme/black.min.css" id="theme">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
+  <!-- Framer Motion (Web) -->
+  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #e5e7eb;
+      font-family: 'Geist Sans', 'Inter', 'Roboto', sans-serif;
+    }
+    .accent {
+      color: #2dd4bf;
+    }
+    .secondary {
+      color: #818cf8;
+    }
+    .glass {
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.12);
+      border-radius: 1.25rem;
+      padding: 2rem;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg,#2dd4bf,#818cf8);
+      z-index: 2000;
+      transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .stepper {
+      position: fixed;
+      top: 4px; left: 0; width: 100vw;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+      background: rgba(10,10,10,0.85);
+    }
+    .step {
+      width: 1.5rem; height: 1.5rem;
+      border-radius: 50%;
+      margin: 0 0.5rem;
+      background: #23272f;
+      border: 2px solid #2dd4bf;
+      display: flex; align-items: center; justify-content: center;
+      color: #2dd4bf;
+      font-weight: bold;
+      opacity: 0.7;
+      transition: background 0.3s, color 0.3s, opacity 0.3s;
+    }
+    .step.active {
+      background: #2dd4bf;
+      color: #0a0a0a;
+      opacity: 1;
+    }
+    .reveal .slides {
+      background: transparent;
+    }
+    .katex {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 1.2em;
+      letter-spacing: 0.01em;
+    }
+    .demo-placeholder {
+      border: 2px dashed #818cf8;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      color: #818cf8;
+      margin: 1rem 0;
+      background: rgba(40,40,60,0.15);
+    }
+    .demo-img {
+      background: #18181b;
+      object-fit: cover;
+      border: 1.5px solid #23272f;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .demo-img:empty, .demo-img[src=""], .demo-img:not([src]) {
+      background: repeating-linear-gradient(45deg, #23272f 0 10px, #18181b 10px 20px);
+      color: #818cf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      min-height: 80px;
+      min-width: 80px;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="global-progress"></div>
+  <div class="stepper" id="progress-stepper">
+    <div class="step" id="step-1">1</div>
+    <div class="step" id="step-2">2</div>
+    <div class="step" id="step-3">3</div>
+    <div class="step" id="step-4">4</div>
+    <div class="step" id="step-5">5</div>
+    <div class="step" id="step-6">6</div>
+  </div>
+  <div class="reveal">
+    <div class="slides max-w-screen-lg mx-auto flex flex-col justify-center items-center" style="min-height: 90vh;">
+      <!-- Slide 1: Vision & Agenda -->
+      <section>
+        <div class="flex flex-col items-center justify-center h-full min-h-[600px] reveal-zoom">
+          <div class="w-full flex flex-col items-center">
+            <div class="accent text-4xl font-bold mb-2 tracking-tight">AI-Driven Drug Discovery</div>
+            <div class="secondary text-2xl mb-6">Predicting HIV-1 Protease Inhibition with Deep Learning</div>
+            <div class="glass w-full max-w-2xl mb-8">
+              <div class="text-lg mb-2 font-semibold">Vision</div>
+              <div class="text-base leading-relaxed">
+                Harnessing computational screening to revolutionize drug discovery—dramatically reducing wet-lab costs and accelerating the identification of novel HIV-1 protease inhibitors.
+              </div>
+            </div>
+            <div class="glass w-full max-w-2xl">
+              <div class="accent text-xl font-bold mb-2">Agenda</div>
+              <ol class="list-decimal ml-6 text-base">
+                <li>The Vision: Why Computational Screening?</li>
+                <li>The Bridge: Featurizing Molecules</li>
+                <li>The Brain: Deep Learning Theory</li>
+                <li>The Build: Tackling Imbalance</li>
+                <li>The Breakthrough: Results & Impact</li>
+                <li>The Future: Next Steps</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Slide 2: Numeralizing Data (Featurization) -->
+      <section>
+        <div class="flex flex-col items-center justify-center min-h-[600px] reveal-zoom">
+          <div class="glass w-full max-w-2xl flex flex-col items-center py-10">
+            <div class="accent text-2xl font-bold mb-3">Numeralizing Chemistry: Morgan Fingerprints</div>
+            <div class="mb-4 text-lg text-center">SMILES strings are transformed into high-dimensional Morgan fingerprints, encoding chemical structure for machine learning. <span class="secondary">This enables scalable, automated screening of vast chemical libraries—far beyond the reach of traditional wet-lab assays.</span></div>
+            <div id="fingerprint-lab" class="w-full flex flex-col items-center">
+              <div class="font-semibold mb-2">Interactive Molecule Decoder</div>
+              <div class="flex gap-6 items-center mb-2">
+                <div id="molecule-svg" style="width:100px;height:100px;background:rgba(40,40,60,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="32" stroke="#818cf8" stroke-width="3" fill="#18181b" />
+                    <polygon points="40,12 68,40 54,68 26,68 12,40" fill="#2dd4bf" opacity="0.15" />
+                    <circle cx="40" cy="12" r="5" fill="#2dd4bf" />
+                    <circle cx="68" cy="40" r="5" fill="#2dd4bf" />
+                    <circle cx="54" cy="68" r="5" fill="#2dd4bf" />
+                    <circle cx="26" cy="68" r="5" fill="#2dd4bf" />
+                    <circle cx="12" cy="40" r="5" fill="#2dd4bf" />
+                  </svg>
+                </div>
+                <div id="bit-grid" style="display:grid;grid-template-columns:repeat(32,1fr);grid-template-rows:repeat(32,1fr);gap:1px;width:160px;height:160px;background:#23272f;border-radius:8px;box-shadow:0 0 0 2px #818cf8;"></div>
+              </div>
+              <span class="text-xs mt-2 text-gray-400">Hover over atoms/bonds to highlight fingerprint bits</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Slide 3: Class Distribution -->
+      <section>
+        <div class="flex flex-col items-center justify-center min-h-[600px] reveal-zoom">
+          <div class="glass w-full max-w-md fade-in-up flex flex-col items-center py-10">
+            <div class="font-bold accent mb-1 text-lg">Class Distribution</div>
+            <img src="./figures/01_class_distribution.png" alt="Class Distribution" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 400px;">
+            <ul class="list-disc ml-6 mb-2 text-base text-gray-300">
+              <li>Dataset is highly imbalanced: 3.5% Active, 96.5% Inactive.</li>
+              <li>Highlights the challenge for standard ML models.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+          /* Consistent image style for demo images */
+          .demo-img {
+            background: #18181b;
+            object-fit: cover;
+            border: 1.5px solid #23272f;
+            transition: box-shadow 0.2s, transform 0.2s;
+          }
+          .demo-img:empty, .demo-img[src=""], .demo-img:not([src]) {
+            background: repeating-linear-gradient(45deg, #23272f 0 10px, #18181b 10px 20px);
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            min-height: 80px;
+            min-width: 80px;
+          }
+      </section>
+      <!-- Slide 3: The Brain (Theory/Math) -->
+      <section>
+        <div class="flex flex-col items-center reveal-zoom">
+          <div class="accent text-2xl font-bold mb-2">The Brain: Deep Learning Theory</div>
+          <div class="mb-4 text-lg">A multilayer perceptron (MLP) learns to map molecular fingerprints to inhibition probability. Each layer transforms the representation, extracting higher-order features.</div>
+          <div id="math-to-code" class="glass w-full max-w-2xl flex flex-col items-center">
+            <div class="font-semibold mb-2">Backprop Visualizer</div>
+            <div class="katex mb-4">$$
+\mathbf{a}^{(l)} = \sigma(\mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)})
+$$</div>
+            <div id="mlp-demo" class="flex flex-col items-center">
+              <button id="fire-signal" class="px-3 py-1 rounded bg-[#2dd4bf] text-black font-bold mb-2">Step</button>
+              <div id="mlp-canvas-wrap" style="width:340px;height:180px;position:relative;">
+                <canvas id="mlp-canvas" width="340" height="180" style="width:340px;height:180px;background:transparent;"></canvas>
+              </div>
+              <span class="text-xs mt-2">Step through: highlight formula & animate pulse</span>
+            </div>
+          </div>
+          <ul class="list-disc ml-6 mt-6 text-base text-gray-300">
+            <li>Each MLP layer extracts higher-order molecular features.</li>
+            <li>Backpropagation enables the network to learn from errors and improve predictions.</li>
+          </ul>
+        </div>
+      </section>
+      <!-- Slide 4: The Build (Implementation & Imbalance) -->
+      <section>
+        <div class="flex flex-col md:flex-row items-center gap-12 min-h-[600px] w-full reveal-zoom">
+          <div class="flex flex-col w-full md:w-1/2">
+            <div class="accent text-2xl font-bold mb-3">The Build: Tackling Imbalance</div>
+            <div class="mb-4 text-lg">The MoleculeNet HIV dataset is highly imbalanced: <span class="accent font-bold">3.5% Active</span> vs <span class="secondary font-bold">96.5% Inactive</span>. To overcome this, we implemented a <span class="accent">weighted binary cross-entropy loss</span>—amplifying the signal from rare actives and ensuring robust learning.</div>
+            <div id="weighted-scale" class="glass flex flex-col items-center">
+              <div class="font-semibold mb-2">Weighted Scale Demo</div>
+              <div class="flex gap-4 items-center mb-2">
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" id="toggle-weights" class="form-checkbox accent" checked>
+                  <span class="text-sm">Train with Weighted Loss (27.48x)</span>
+                </label>
+              </div>
+              <div id="scale-visual" style="position:relative;width:220px;height:100px;">
+                <!-- Animated scale will be rendered here -->
+              </div>
+              <div class="flex gap-4 mt-2">
+                <span class="text-xs">Inactive: 40,000</span>
+                <span class="text-xs">Active: 1,443</span>
+                <span class="text-xs">Penalty: <span id="scale-penalty">27.48</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-6 w-full md:w-1/2 items-center">
+            <div class="glass w-full max-w-md fade-in-up">
+              <div class="font-bold accent mb-1 text-lg">Training vs Validation Loss</div>
+              <img src="./figures/03_training_validation_loss.png" alt="Training vs Validation Loss" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 400px;">
+              <ul class="list-disc ml-6 mb-2 text-base text-gray-300">
+                <li>Weighted loss enables robust generalization despite imbalance.</li>
+                <li>Model avoids overfitting and learns meaningful patterns.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <!-- Slide 5: The Breakthrough (Results & Impact) -->
+      <section>
+        <div class="flex flex-col md:flex-row items-center gap-12 min-h-[600px] w-full reveal-zoom">
+          <div class="flex flex-col w-full md:w-1/2">
+            <div class="accent text-2xl font-bold mb-3">The Breakthrough: Results & Impact</div>
+            <div class="mb-4 text-lg">Our model achieves strong predictive performance, enabling prioritization of compounds for experimental validation. <span class="secondary">This translates to substantial cost savings and accelerated discovery cycles.</span></div>
+            <div id="decision-threshold" class="glass flex flex-col items-center">
+              <div class="font-semibold mb-2">Precision-Recall Dashboard</div>
+              <div class="flex flex-col md:flex-row gap-6 items-center w-full">
+                <div class="flex flex-col items-center">
+                  <label for="threshold-slider" class="text-sm mb-1">Prediction Threshold</label>
+                  <input type="range" min="0" max="100" value="50" id="threshold-slider" class="w-64 mb-2">
+                </div>
+                <div>
+                  <div class="font-bold mb-1">Confusion Matrix</div>
+                  <table id="conf-matrix" class="text-xs border border-[#818cf8] rounded mb-2">
+                    <tr><th></th><th>Pred 0</th><th>Pred 1</th></tr>
+                    <tr><th>True 0</th><td id="cm-t00">38400</td><td id="cm-t01">1600</td></tr>
+                    <tr><th>True 1</th><td id="cm-t10">600</td><td id="cm-t11">400</td></tr>
+                  </table>
+                </div>
+                <div>
+                  <div class="font-bold mb-1">PR Curve</div>
+                  <canvas id="pr-curve" width="120" height="120" style="background:#23272f;border-radius:8px;"></canvas>
+                </div>
+              </div>
+              <div class="mt-4 text-sm accent" id="impact-readout">At this threshold, you save <b>$2M</b> in lab costs but miss 10% of potential drugs.</div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-6 w-full md:w-1/2 items-center">
+            <div class="glass w-full max-w-md fade-in-up">
+              <div class="font-bold accent mb-1 text-lg">ROC Curve</div>
+              <img src="./figures/04_roc_curve.png" alt="ROC Curve (Presentation)" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
+              <ul class="list-disc ml-6 mb-2 text-base text-gray-300">
+                <li>Shows model's ability to distinguish actives from inactives.</li>
+                <li>High AUC indicates strong discrimination.</li>
+              </ul>
+            </div>
+            <div class="glass w-full max-w-md fade-in-up">
+              <div class="font-bold accent mb-1 text-lg">Precision-Recall Curve</div>
+              <img src="./figures/06_precision_recall_curve.png" alt="PR Curve (Presentation)" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
+              <ul class="list-disc ml-6 mb-2 text-base text-gray-300">
+                <li>Highlights performance on rare actives.</li>
+                <li>Essential for imbalanced datasets.</li>
+              </ul>
+            </div>
+            <div class="glass w-full max-w-md fade-in-up">
+              <div class="font-bold accent mb-1 text-lg">Experiment Comparison</div>
+              <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison" class="rounded-lg shadow-lg demo-img mb-2" style="max-width: 320px;">
+              <ul class="list-disc ml-6 mb-2 text-base text-gray-300">
+                <li>Compares architectures and hyperparameters.</li>
+                <li>Demonstrates value of advanced deep learning.</li>
+              </ul>
+            </div>
+          </div>
+          <style>
+            .fade-in-up {
+              opacity: 0;
+              transform: translateY(32px);
+              animation: fadeInUp 0.8s cubic-bezier(.4,0,.2,1) forwards;
+              animation-delay: 0.2s;
+            }
+            @keyframes fadeInUp {
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+          </style>
+        </div>
+        <style>
+          .reveal-zoom {
+            animation: zoomIn 0.7s cubic-bezier(.4,0,.2,1);
+          }
+          @keyframes zoomIn {
+            from { transform: scale(0.92); opacity: 0.2; }
+            to { transform: scale(1); opacity: 1; }
+          }
+        </style>
+      <!-- Slide 6: The Future -->
+      <section>
+        <div class="flex flex-col items-center justify-center min-h-[600px]">
+          <div class="accent text-2xl font-bold mb-4">The Future: Next Steps</div>
+          <div class="mb-4 text-lg">This project demonstrates the transformative potential of deep learning for molecular property prediction. <span class="secondary">Next: explore Graph Neural Networks for richer molecular representations and integrate active learning for iterative improvement.</span></div>
+          <div class="flex gap-6">
+            <a href="https://github.com/your-repo" class="accent underline text-lg" target="_blank">GitHub Repo</a>
+            <a href="../notebooks/hiv_classification_project.ipynb" class="secondary underline text-lg" target="_blank">Project Notebook</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- Reveal.js -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.min.js"></script>
+  <script>
+  // --- Slide 1: 3D Chemical Mesh Animation ---
+  window.addEventListener('DOMContentLoaded', () => {
+    // Simple animated mesh (moving points and lines)
+    const canvas = document.getElementById('mesh-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const points = Array.from({length: 18}, (_,i) => ({
+        x: 200 + 120*Math.cos((i/18)*2*Math.PI),
+        y: 150 + 80*Math.sin((i/18)*2*Math.PI),
+        dx: Math.random()*0.8-0.4,
+        dy: Math.random()*0.8-0.4
+      }));
+      function draw() {
+        ctx.clearRect(0,0,400,300);
+        // Draw lines
+        ctx.strokeStyle = '#2dd4bf88';
+        ctx.lineWidth = 2;
+        for(let i=0;i<points.length;i++){
+          let p1 = points[i], p2 = points[(i+1)%points.length];
+          ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+        }
+        // Draw points
+        for(const p of points){
+          ctx.beginPath();ctx.arc(p.x,p.y,7,0,2*Math.PI);
+          ctx.fillStyle = '#818cf8';ctx.fill();
+          ctx.strokeStyle = '#2dd4bf';ctx.lineWidth=2;ctx.stroke();
+        }
+      }
+      function animate(){
+        for(const p of points){
+          p.x += p.dx; p.y += p.dy;
+          if(p.x<40||p.x>360) p.dx*=-1;
+          if(p.y<40||p.y>260) p.dy*=-1;
+        }
+        draw();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    // --- Slide 3: Bit-Mapper (Reveal.js aware) ---
+    function setupBitGrid() {
+      const bitGrid = document.getElementById('bit-grid');
+      if (!bitGrid) return;
+      bitGrid.innerHTML = '';
+      let highlight = false;
+      for(let i=0;i<1024;i++){
+        const cell = document.createElement('div');
+        cell.style.width = '4px';cell.style.height = '4px';
+        cell.style.background = '#23272f';
+        cell.style.borderRadius = '2px';
+        bitGrid.appendChild(cell);
+      }
+      // Add a toggle button if not present
+      let toggleBtn = document.getElementById('toggle-feature');
+      if (!toggleBtn) {
+        toggleBtn = document.createElement('button');
+        toggleBtn.id = 'toggle-feature';
+        toggleBtn.textContent = 'Highlight Bits';
+        toggleBtn.className = 'px-2 py-1 rounded bg-[#818cf8] text-white text-xs font-bold mt-2';
+        bitGrid.parentElement.appendChild(toggleBtn);
+      }
+      toggleBtn.onclick = () => {
+        highlight = !highlight;
+        for(let i=0;i<1024;i++){
+          const cell = bitGrid.children[i];
+          if(highlight && (i%33===0||i%17===0||i%7===0)){
+            cell.style.background = '#2dd4bf';
+            cell.style.boxShadow = '0 0 6px #2dd4bf';
+          } else {
+            cell.style.background = '#23272f';
+            cell.style.boxShadow = 'none';
+          }
+        }
+        toggleBtn.textContent = highlight ? 'Unhighlight Bits' : 'Highlight Bits';
+      };
+      // Reset state
+      highlight = false;
+      toggleBtn.textContent = 'Highlight Bits';
+    }
+
+    // Reveal.js slidechanged event for Bit Grid
+    deck.on('slidechanged', event => {
+      const curr = event.currentSlide;
+      if (curr && curr.querySelector && curr.querySelector('#bit-grid')) {
+        setupBitGrid();
+      }
+    });
+    // Also run on DOMContentLoaded if already on the slide
+    if (document.getElementById('bit-grid')) setupBitGrid();
+
+    // --- Slide 4: MLP Signal Flow (Reveal.js aware) ---
+    function setupMLPDemo() {
+      const mlpCanvas = document.getElementById('mlp-canvas');
+      const fireBtn = document.getElementById('fire-signal');
+      if (!mlpCanvas || !fireBtn) return;
+      const ctx = mlpCanvas.getContext('2d');
+      const layers = [32, 16, 8];
+      const nodes = [];
+      let pulse = null;
+      // Layout nodes
+      for(let l=0;l<3;l++){
+        nodes[l]=[];
+        for(let n=0;n<layers[l];n++){
+          nodes[l][n]={
+            x: 40+l*120,
+            y: 20+((140/(layers[l]-1))*(n)),
+          };
+        }
+      }
+      function drawMLP(){
+        ctx.clearRect(0,0,340,180);
+        // Edges
+        ctx.strokeStyle='#818cf888';ctx.lineWidth=1;
+        for(let l=0;l<2;l++){
+          for(let i=0;i<layers[l];i++){
+            for(let j=0;j<layers[l+1];j++){
+              ctx.beginPath();ctx.moveTo(nodes[l][i].x,nodes[l][i].y);ctx.lineTo(nodes[l+1][j].x,nodes[l+1][j].y);ctx.stroke();
+            }
+          }
+        }
+        // Nodes
+        for(let l=0;l<3;l++){
+          for(let n=0;n<layers[l];n++){
+            ctx.beginPath();ctx.arc(nodes[l][n].x,nodes[l][n].y,6,0,2*Math.PI);
+            ctx.fillStyle = '#23272f';ctx.fill();
+            ctx.strokeStyle = '#2dd4bf';ctx.lineWidth=2;ctx.stroke();
+          }
+        }
+        // Pulse
+        if(pulse){
+          ctx.beginPath();ctx.arc(pulse.x,pulse.y,10,0,2*Math.PI);
+          ctx.fillStyle = '#2dd4bf';ctx.globalAlpha=0.7;ctx.fill();ctx.globalAlpha=1;
+          ctx.font = 'bold 12px Fira Code, monospace';ctx.fillStyle='#fff';ctx.fillText('w·x+b',pulse.x-16,pulse.y-14);
+        }
+      }
+      drawMLP();
+      fireBtn.onclick = () => {
+        let l=0,n=0;
+        pulse={x:nodes[0][0].x,y:nodes[0][0].y};
+        function animatePulse(){
+          if(l<3){
+            let next = nodes[l][n%layers[l]];
+            pulse.x = next.x; pulse.y = next.y;
+            drawMLP();
+            n++;
+            if(n>=layers[l]){l++;n=0;}
+            setTimeout(animatePulse,60);
+          }else{pulse=null;drawMLP();}
+        }
+        animatePulse();
+      };
+    }
+
+    deck.on('slidechanged', event => {
+      const curr = event.currentSlide;
+      if (curr && curr.querySelector && curr.querySelector('#mlp-canvas')) {
+        setupMLPDemo();
+      }
+    });
+    // Also run on DOMContentLoaded if already on the slide
+    if (document.getElementById('mlp-canvas')) setupMLPDemo();
+
+    // --- Slide 5: Error Gradient Heatmap ---
+    const gradMap = document.getElementById('gradient-heatmap');
+    const gradSlider = document.getElementById('gradient-slider');
+    if (gradMap && gradSlider) {
+      function renderHeatmap(step){
+        gradMap.innerHTML='';
+        for(let i=0;i<50;i++){
+          let v = Math.abs(Math.sin(i/7+step/2));
+          let color = `rgba(${40+180*v},${130+80*(1-v)},${248-100*v},0.95)`;
+          let cell = document.createElement('div');
+          cell.style.background=color;
+          cell.style.borderRadius='3px';
+          gradMap.appendChild(cell);
+        }
+      }
+      gradSlider.oninput = e => renderHeatmap(Number(e.target.value));
+      renderHeatmap(0);
+    }
+
+    // --- Slide 6: Weighted Scale Demo (Reveal.js aware) ---
+    function setupWeightedScale() {
+      const scaleSlider = document.getElementById('scale-slider');
+      const left = document.getElementById('scale-left');
+      const right = document.getElementById('scale-right');
+      const penalty = document.getElementById('scale-penalty');
+      if (!scaleSlider || !left || !right || !penalty) return;
+      scaleSlider.oninput = e => {
+        let val = Number(e.target.value);
+        penalty.textContent = val;
+        // Move left side down as penalty increases
+        left.style.top = (30+val/2)+"px";
+        right.style.top = (30-val/10)+"px";
+        left.style.boxShadow = val>30?'0 0 16px #2dd4bf,0 0 0 2px #23272f':'0 0 0 2px #23272f';
+      };
+      // Reset slider and penalty
+      scaleSlider.value = 27.48;
+      penalty.textContent = 27.48;
+      scaleSlider.oninput({target:{value:scaleSlider.value}});
+    }
+
+    deck.on('slidechanged', event => {
+      const curr = event.currentSlide;
+      if (curr && curr.querySelector && curr.querySelector('#scale-slider')) {
+        setupWeightedScale();
+      }
+    });
+    // Also run on DOMContentLoaded if already on the slide
+    if (document.getElementById('scale-slider')) setupWeightedScale();
+
+    // --- Slide 7: PR Dashboard (Reveal.js aware) ---
+    function setupPRDashboard() {
+      const thresholdSlider = document.getElementById('threshold-slider');
+      const cm00 = document.getElementById('cm-t00');
+      const cm01 = document.getElementById('cm-t01');
+      const cm10 = document.getElementById('cm-t10');
+      const cm11 = document.getElementById('cm-t11');
+      const pr = document.getElementById('pr-curve');
+      if (!thresholdSlider || !cm00 || !cm01 || !cm10 || !cm11 || !pr) return;
+      function updateCM(thresh){
+        // Fake numbers for demo
+        let tpr = thresh/100, fpr = (100-thresh)/100*0.04;
+        let tn = Math.round(40000*(1-fpr)), fp = 40000-tn;
+        let tp = Math.round(1000*tpr), fn = 1000-tp;
+        cm00.textContent = tn;
+        cm01.textContent = fp;
+        cm10.textContent = fn;
+        cm11.textContent = tp;
+      }
+      thresholdSlider.oninput = e => {
+        let val = Number(e.target.value);
+        updateCM(val);
+        // Move dot on PR curve
+        const ctx = pr.getContext('2d');
+        ctx.clearRect(0,0,120,120);
+        // Draw PR curve (fake)
+        ctx.beginPath();ctx.moveTo(10,110);
+        ctx.bezierCurveTo(40,60,80,40,110,20);
+        ctx.strokeStyle='#2dd4bf';ctx.lineWidth=3;ctx.stroke();
+        // Dot
+        let x = 10+val; let y = 110-val*0.9;
+        ctx.beginPath();ctx.arc(x,y,7,0,2*Math.PI);
+        ctx.fillStyle='#818cf8';ctx.fill();
+        ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+      };
+      // Reset slider and confusion matrix
+      thresholdSlider.value = 50;
+      thresholdSlider.oninput({target:{value:thresholdSlider.value}});
+    }
+
+    deck.on('slidechanged', event => {
+      const curr = event.currentSlide;
+      if (curr && curr.querySelector && curr.querySelector('#threshold-slider')) {
+        setupPRDashboard();
+      }
+    });
+    // Also run on DOMContentLoaded if already on the slide
+    if (document.getElementById('threshold-slider')) setupPRDashboard();
+  });
+    let deck = new Reveal({
+      hash: true,
+      slideNumber: true,
+      transition: 'fade',
+      backgroundTransition: 'slide',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 1.5
+    });
+    deck.initialize();
+    // Progress Stepper logic & progress bar
+    deck.on('slidechanged', event => {
+      let idx = event.indexh;
+      for (let i = 1; i <= 6; ++i) {
+        document.getElementById('step-' + i).classList.remove('active');
+      }
+      document.getElementById('step-' + (idx + 1)).classList.add('active');
+      // Progress bar
+      const progress = document.getElementById('global-progress');
+      progress.style.width = ((idx+1)/6*100) + '%';
+    });
+    // Set initial step
+    document.getElementById('step-1').classList.add('active');
+    document.getElementById('global-progress').style.width = '16.6%';
+  </script>
+</body>
+</html>
