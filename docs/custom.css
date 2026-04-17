@@ -1,0 +1,349 @@
+/* Make KaTeX/math smaller and wrap if needed */
+.katex, .katex-display {
+  font-size: 0.82em !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.2 !important;
+}
+
+/* Prevent math overflow in slide content */
+.slides, .reveal .slides {
+  overflow: hidden !important;
+}
+
+/* Tweak interactive demo visuals for better fit */
+#dropout-visual svg, #relu-visual svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Remove random/placeholder text and shrink math in slide narrative */
+.demo-desc, .random-text, .placeholder-text {
+  display: none !important;
+}
+/* Card and Tabs for left pane */
+.card {
+  background: rgba(18, 18, 26, 0.92);
+  border-radius: 1.25rem;
+  box-shadow: 0 0 0 1px rgba(129,140,248,0.25), 0 8px 40px 0 rgba(0,0,0,0.32);
+  border: 1px solid rgba(129,140,248,0.3);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card:hover {
+  box-shadow: 0 0 0 1.5px rgba(45,212,191,0.5), 0 0 32px rgba(45,212,191,0.12), 0 8px 40px rgba(0,0,0,0.35);
+  border-color: rgba(45,212,191,0.4);
+}
+/* Completely transparent left-pane display area */
+.card-clear {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0;
+  overflow: visible !important;
+}
+.card-clear:hover {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.card-clear .tab-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.card-clear .tab-panel .demo-img {
+  max-height: 440px !important;
+}
+/* Slide grids: title row auto, content row fills remaining height */
+section[data-transition="fade"] > .grid,
+section[data-transition="fade"] > div > .grid {
+  grid-template-rows: auto 1fr !important;
+  align-items: stretch !important;
+}
+.tab-btn {
+  background: none;
+  border-radius: 9999px;
+  border: 1px solid rgba(129,140,248,0.4);
+  outline: none;
+  color: #818cf8;
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 0.22rem 1rem;
+  letter-spacing: 0.03em;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.tab-btn:hover:not(.tab-active) {
+  background: rgba(129,140,248,0.12);
+}
+.tab-btn.tab-active {
+  background: rgba(45,212,191,0.12);
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+  font-weight: 600;
+}
+.tab-content {
+  min-height: 240px;
+  transition: opacity 0.2s;
+}
+/* Demo images — CSS class controls sizing; !important overrides inline max-height */
+.demo-img {
+  max-height: 370px !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+}
+/* Centered, responsive slide titles */
+.col-span-12.slide-up {
+  text-align: center;
+}
+.col-span-12.slide-up h2 {
+  font-size: clamp(0.78rem, 1.7vw, 1.25rem) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.col-span-12.slide-up .secondary {
+  font-size: clamp(0.62rem, 1vw, 0.82rem) !important;
+}
+/* Slide-up animation for dual-pane content blocks */
+.slide-up {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: slideUp 0.65s cubic-bezier(.4,0,.2,1) forwards;
+  animation-delay: 0.1s;
+}
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  background: #0a0a0a;
+  color: #e5e7eb;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.accent {
+  color: #2dd4bf;
+}
+.secondary {
+  color: #818cf8;
+}
+.glass {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(129,140,248,0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 1px rgba(129,140,248,0.08), 0 4px 32px 0 rgba(0,0,0,0.18);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+}
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 4px;
+  background: linear-gradient(90deg,#2dd4bf,#818cf8);
+  z-index: 2000;
+  transition: width 0.4s cubic-bezier(.4,0,.2,1);
+}
+.stepper {
+  position: fixed;
+  top: 4px; left: 0; width: 100vw;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  background: rgba(10,10,10,0.85);
+}
+.step {
+  width: 1.5rem; height: 1.5rem;
+  border-radius: 50%;
+  margin: 0 0.5rem;
+  background: #23272f;
+  border: 2px solid #2dd4bf;
+  display: flex; align-items: center; justify-content: center;
+  color: #2dd4bf;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: background 0.3s, color 0.3s, opacity 0.3s;
+}
+.step.active {
+  background: #2dd4bf;
+  color: #0a0a0a;
+  opacity: 1;
+}
+.reveal .slides {
+  background: transparent;
+}
+.katex {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82em;
+  letter-spacing: 0.01em;
+}
+.demo-placeholder {
+  border: 2px dashed #818cf8;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  color: #818cf8;
+  margin: 1rem 0;
+  background: rgba(40,40,60,0.15);
+}
+.demo-img {
+  background: #18181b;
+  object-fit: cover;
+  border: 1.5px solid #23272f;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.demo-img:empty, .demo-img[src=""], .demo-img:not([src]) {
+  background: repeating-linear-gradient(45deg, #23272f 0 10px, #18181b 10px 20px);
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  min-height: 80px;
+  min-width: 80px;
+}
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(32px);
+  animation: fadeInUp 0.8s cubic-bezier(.4,0,.2,1) forwards;
+  animation-delay: 0.2s;
+}
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal-zoom {
+  animation: zoomIn 0.7s cubic-bezier(.4,0,.2,1);
+}
+@keyframes zoomIn {
+  from { transform: scale(0.92); opacity: 0.2; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* GNN pulse ring on Future slide */
+.gnn-pulse {
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  border: 2px solid rgba(45,212,191,0.35);
+  animation: gnnPulse 3.2s ease-in-out infinite;
+}
+@keyframes gnnPulse {
+  0%   { transform: scale(0.85); opacity: 0.6; box-shadow: 0 0 0 0 rgba(45,212,191,0.25); }
+  50%  { transform: scale(1.08); opacity: 0.2; box-shadow: 0 0 60px 20px rgba(45,212,191,0.08); }
+  100% { transform: scale(0.85); opacity: 0.6; box-shadow: 0 0 0 0 rgba(45,212,191,0.25); }
+}
+
+/* ─── Slide Figures Sidebar ──────────────────────────────────────────────────── */
+.fig-sidebar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8000;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.sidebar-toggle {
+  width: 22px;
+  min-height: 72px;
+  background: rgba(18,18,26,0.92);
+  border: 1px solid rgba(129,140,248,0.35);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  color: #818cf8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.sidebar-toggle:hover { background: rgba(45,212,191,0.1); color: #2dd4bf; }
+.sidebar-inner {
+  width: 190px;
+  order: -1;
+  max-height: 80vh;
+  background: rgba(8,8,18,0.97);
+  border: 1px solid rgba(129,140,248,0.22);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  padding: 0.75rem 0.5rem;
+  overflow-y: auto;
+  transform: translateX(calc(100% + 22px));
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.28s;
+  pointer-events: none;
+}
+.fig-sidebar.open .sidebar-inner {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.sidebar-header {
+  font-size: 0.65rem;
+  color: #818cf8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(129,140,248,0.2);
+}
+.sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.3rem;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+.sidebar-item:hover {
+  background: rgba(45,212,191,0.07);
+  border-color: rgba(45,212,191,0.25);
+}
+.sidebar-item img {
+  width: 100%;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #12121a;
+  border: 1px solid rgba(129,140,248,0.12);
+}
+/* ── Hidden scrollbars ───────────────────────────────────────────────────── */
+/* Firefox + IE/Edge legacy */
+* { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+/* Chrome / Safari / Edge (Chromium) */
+*::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+/* Explicit overrides for document root to prevent viewport scrollbar */
+html, body {
+  overflow: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none !important; }
+
+.sidebar-item span {
+  font-size: 0.6rem;
+  color: #9ca3af;
+  margin-top: 0.2rem;
+  text-align: center;
+  line-height: 1.2;
+}
