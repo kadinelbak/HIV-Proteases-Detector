@@ -16,18 +16,17 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   //  Reveal.js Init 
+  // Slide order:
+  // 0: Vision, 1: Fingerprints, 2: Class Imbalance, 3: MLP,
+  // 4: Weighted Loss, 5: ROC, 6: PR, 7: AP Experiment,
+  // 8: Feature Importance, 9: Future, 10: Thank You
   function setupInteractivesForSlide(idx) {
     console.log('[HIV] setupInteractivesForSlide(', idx, ')');
-    if (idx === 0) setupCostCounter();
     if (idx === 1) setupBitGrid();
-    if (idx === 2) setupRandomGuesser();
-    if (idx === 3) setupMLPDemo();
-    if (idx === 4) setupDropoutDemo();
-    if (idx === 4) setupReLUDemo();
-    if (idx === 5) setupWeightedScale();
-    if (idx === 6) setupROCChart();
-    if (idx === 7) setupPRChart();
-    if (idx === 8) setupAPChart();
+    if (idx === 5) setupROCChart();
+    if (idx === 6) setupPRChart();
+    if (idx === 7) setupAPChart();
+    if (idx === 8) setupFeatureImportance();
   }
 
   var deck = new Reveal({

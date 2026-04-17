@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HIV Protease Inhibitor Classifier — Project Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0a0a12;
+      --bg2:      #11121e;
+      --teal:     #2dd4bf;
+      --purple:   #818cf8;
+      --text:     #e5e7eb;
+      --muted:    #9ca3af;
+      --faint:    #6b7280;
+      --border:   rgba(129,140,248,0.18);
+      --border2:  rgba(45,212,191,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Utility ────────────────────────────────── */
+    .accent  { color: var(--teal); }
+    .purple  { color: var(--purple); }
+
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pill-teal   { background: rgba(45,212,191,0.1);  color: var(--teal);   border: 1px solid var(--border2); }
+    .pill-purple { background: rgba(129,140,248,0.1); color: var(--purple); border: 1px solid rgba(129,140,248,0.3); }
+
+    .card {
+      background: rgba(17,18,30,0.95);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 0 28px rgba(45,212,191,0.07);
+    }
+
+    .metric-card {
+      background: rgba(45,212,191,0.06);
+      border: 1px solid rgba(45,212,191,0.2);
+      border-radius: 0.75rem;
+      padding: 1.1rem 1rem;
+      text-align: center;
+    }
+    .metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: -0.02em;
+    }
+    .metric-label {
+      font-size: 0.68rem;
+      color: var(--faint);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 0.3rem;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 0.4rem;
+    }
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--teal);
+      line-height: 1.25;
+      margin-bottom: 0.8rem;
+    }
+    p.body-text {
+      color: #d1d5db;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+    p.muted-text {
+      color: var(--muted);
+      font-size: 0.87rem;
+      line-height: 1.7;
+    }
+
+    .fig-caption {
+      font-size: 0.73rem;
+      color: var(--faint);
+      text-align: center;
+      margin-top: 0.6rem;
+      line-height: 1.5;
+    }
+    .fig-caption strong { color: var(--teal); }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: linear-gradient(135deg, rgba(45,212,191,0.13), rgba(129,140,248,0.13));
+      border: 1px solid rgba(45,212,191,0.45);
+      color: var(--teal);
+      border-radius: 9999px;
+      padding: 0.55rem 1.4rem;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .cta-btn:hover {
+      background: linear-gradient(135deg, rgba(45,212,191,0.22), rgba(129,140,248,0.22));
+      box-shadow: 0 0 20px rgba(45,212,191,0.16);
+    }
+    .cta-btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .cta-btn-ghost:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+      box-shadow: none;
+    }
+
+    hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); }
+
+    /* ── Nav ───────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10,10,18,0.93);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .nav-brand-text {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--teal);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* ── Main container ─────────────────────────── */
+    main {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+
+    /* ── Two-col content grid ───────────────────── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+
+    /* ── Results three-col grid ─────────────────── */
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    /* ── Two-col equal ──────────────────────────── */
+    .two-col-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    /* ── Next-steps three-col ───────────────────── */
+    .next-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-bottom: 4rem;
+    }
+
+    /* ── Footer ─────────────────────────────────── */
+    footer {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-qr-block {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .qr-wrap {
+      background: #ffffff;
+      border-radius: 0.6rem;
+      padding: 5px;
+      flex-shrink: 0;
+      border: 2px solid rgba(45,212,191,0.35);
+    }
+    .footer-links { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+    .footer-meta { font-size: 0.73rem; color: #4b5563; line-height: 1.7; max-width: 220px; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 720px) {
+      .two-col        { grid-template-columns: 1fr; gap: 1.75rem; }
+      .two-col.reverse { direction: ltr; }
+      .two-col.reverse-mobile > *:first-child { order: 2; }
+      .three-col      { grid-template-columns: 1fr; }
+      .two-col-equal  { grid-template-columns: 1fr; }
+      .next-cards     { grid-template-columns: 1fr; }
+      .section-title  { font-size: 1.2rem; }
+      footer          { flex-direction: column; }
+      .footer-meta    { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────────────────── -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <a href="#" class="nav-brand-text">HIV Protease AI</a>
+        <span class="pill pill-teal">Class Project · Spring 2026</span>
+      </div>
+      <a href="./index.html" class="cta-btn" style="font-size:0.8rem;padding:0.4rem 1.1rem;">
+        Full Presentation →
+      </a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <section style="text-align:center;margin-bottom:4.5rem;">
+      <span class="pill pill-purple" style="margin-bottom:1.1rem;display:inline-block;">AI in Chemistry</span>
+      <h1 style="font-size:clamp(1.8rem,5vw,3.1rem);font-weight:900;line-height:1.15;color:#fff;margin-bottom:1rem;">
+        AI-Driven Drug Discovery:<br>
+        <span class="accent">Predicting HIV-1 Protease Inhibition</span>
+      </h1>
+      <p style="color:var(--muted);font-size:1.05rem;max-width:42rem;margin:0 auto 2.5rem;line-height:1.75;">
+        A deep learning classifier trained on 41,000+ chemical compounds to identify HIV-1 protease
+        inhibitors from molecular fingerprints — compressing years of wet-lab screening into
+        milliseconds of computation.
+      </p>
+
+      <!-- Metric cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;max-width:42rem;margin:0 auto 2.5rem;">
+        <div class="metric-card">
+          <div class="metric-val">0.788</div>
+          <div class="metric-label">AUROC</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">0.356</div>
+          <div class="metric-label">Avg. Precision</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">10×</div>
+          <div class="metric-label">Above Baseline</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">41K+</div>
+          <div class="metric-label">Compounds</div>
+        </div>
+      </div>
+
+      <a href="./index.html" class="cta-btn" style="font-size:0.95rem;padding:0.7rem 2rem;">
+        View Full Presentation →
+      </a>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 1: The Challenge ──────────────────────────── -->
+    <section style="margin-bottom:4.5rem;">
+      <div class="two-col">
+        <!-- Text -->
+        <div>
+          <div class="section-label">The Challenge</div>
+          <div class="section-title">Needle in a Haystack</div>
+          <p class="body-text" style="margin-bottom:1rem;">
+            Only <strong style="color:#fff;">3.5% of compounds</strong> in the dataset are active HIV-1
+            protease inhibitors — a severe class imbalance. A model that always predicts "Inactive"
+            achieves <strong style="color:#fff;">96.5% accuracy</strong> while discovering zero drugs.
+          </p>
+          <p class="muted-text" style="margin-bottom:1rem;">
+            To fix this, we applied <strong style="color:#d1d5db;">weighted binary cross-entropy</strong>
+            with a positive-class penalty of <strong class="accent">27×</strong>, forcing the model to
+            treat each missed active compound as far more costly than a false alarm.
+          </p>
+          <div style="background:rgba(45,212,191,0.05);border-left:3px solid var(--teal);border-radius:0 0.5rem 0.5rem 0;padding:0.85rem 1rem;font-style:italic;font-size:0.87rem;color:var(--muted);">
+            "If you always guess 'Inactive', you win the accuracy game but lose the drug discovery race."
+          </div>
+        </div>
+        <!-- Figure -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/01_class_distribution.png" alt="Class Distribution"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:290px;display:block;">
+          <p class="fig-caption">
+            Fig 1. Dataset class distribution — <strong>1,443 actives</strong> vs. 39,684 inactives
+            across 41,127 compounds (ChEMBL HIV screen)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 2: The Approach ───────────────────────────── -->
+    <section style="margin-bottom:4.5rem;">
+      <div class="two-col reverse reverse-mobile">
+        <!-- Figure (right on desktop, top on mobile) -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/02_sample_fingerprints.png" alt="Morgan Fingerprints"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:290px;display:block;">
+          <p class="fig-caption">
+            Fig 2. Morgan fingerprint bit-vectors — 1024-bit circular hash encoding of each
+            molecule's atomic neighborhoods (radius = 2)
+          </p>
+        </div>
+        <!-- Text -->
+        <div>
+          <div class="section-label">The Approach</div>
+          <div class="section-title">Molecules → Numbers → Predictions</div>
+          <p class="body-text" style="margin-bottom:1rem;">
+            Raw SMILES strings are converted to <strong style="color:#fff;">1024-bit Morgan fingerprints</strong>
+            (radius = 2), encoding circular chemical neighborhoods around each atom into a fixed-length
+            bit-vector a neural network can read.
+          </p>
+          <p class="muted-text" style="margin-bottom:1rem;">
+            These bit vectors feed a <strong style="color:#d1d5db;">3-layer MLP</strong>
+            (1024 → 512 → 256 → 1) with ReLU activations, 50% dropout, and Adam optimization,
+            trained for 50 epochs on an 80/10/10 train/val/test split.
+          </p>
+          <!-- Architecture quick-reference -->
+          <div style="background:rgba(10,10,18,0.8);border:1px solid var(--border);border-radius:0.6rem;padding:0.75rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);line-height:1.9;">
+            Input (1024) → 512, ReLU, Drop(0.5)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 256, ReLU, Drop(0.5)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 1, Sigmoid → P(active)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 3: Training ────────────────────────────────── -->
+    <section style="margin-bottom:4.5rem;">
+      <div class="two-col">
+        <!-- Text -->
+        <div>
+          <div class="section-label">Model Training</div>
+          <div class="section-title">Convergence Without Overfitting</div>
+          <p class="body-text" style="margin-bottom:1rem;">
+            Training and validation losses converge smoothly over 50 epochs without divergence,
+            confirming the model generalizes to unseen compounds.
+            <strong style="color:#fff;">Dropout (p = 0.5)</strong> prevents memorization of majority-class
+            inactives.
+          </p>
+          <p class="muted-text">
+            The validation loss stabilizes around epoch 20, suggesting the weighted loss term
+            effectively focuses learning on rare active compounds early in training.
+          </p>
+        </div>
+        <!-- Figure -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/03_training_validation_loss.png" alt="Training / Validation Loss"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:290px;display:block;">
+          <p class="fig-caption">
+            Fig 3. Train and validation loss over 50 epochs — smooth convergence, no overfitting
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 4: Performance Results ───────────────────── -->
+    <section style="margin-bottom:4.5rem;">
+      <div style="text-align:center;margin-bottom:2.25rem;">
+        <div class="section-label" style="text-align:center;">Performance Results</div>
+        <h2 style="font-size:1.7rem;font-weight:800;color:var(--teal);margin-bottom:0.4rem;">
+          Evaluated on 4,112 Held-Out Compounds
+        </h2>
+        <p style="color:var(--faint);font-size:0.85rem;">
+          Test set = 10% of dataset &thinsp;·&thinsp; confidence threshold = 0.5
+        </p>
+      </div>
+
+      <div class="three-col">
+        <!-- ROC -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/04_roc_curve.png" alt="ROC Curve"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:230px;display:block;">
+          <p class="fig-caption">
+            <strong>AUROC = 0.788</strong><br>
+            Fig 4. ROC Curve — strong discrimination between actives and inactives.
+            Diagonal = random chance.
+          </p>
+        </div>
+        <!-- PR -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/06_precision_recall_curve.png" alt="Precision-Recall Curve"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:230px;display:block;">
+          <p class="fig-caption">
+            <strong>AP = 0.356</strong><br>
+            Fig 5. Precision-Recall Curve — 10× above the 0.035 random baseline.
+            Critical metric for imbalanced data.
+          </p>
+        </div>
+        <!-- Confusion Matrix -->
+        <div class="card" style="padding:1rem;">
+          <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:230px;display:block;">
+          <p class="fig-caption">
+            <strong>58 True Positives</strong><br>
+            Fig 6. Confusion Matrix — 58 of 144 actives correctly identified in the test set.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 5: Insights ────────────────────────────────── -->
+    <section style="margin-bottom:4.5rem;">
+      <div style="text-align:center;margin-bottom:2.25rem;">
+        <div class="section-label" style="text-align:center;">Model Insights</div>
+        <h2 style="font-size:1.7rem;font-weight:800;color:var(--teal);">
+          Development &amp; Interpretability
+        </h2>
+      </div>
+
+      <div class="two-col-equal">
+        <!-- AP Comparison -->
+        <div class="card" style="padding:1.25rem;">
+          <div style="font-size:0.95rem;font-weight:700;color:var(--teal);margin-bottom:0.2rem;">Model Development</div>
+          <div class="section-label">Hyperparameter Sweep</div>
+          <img src="./figures/07_ap_experiment_comparison.png" alt="AP Experiment Comparison"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:210px;display:block;margin-top:0.5rem;">
+          <p class="fig-caption">
+            Fig 7. Average Precision across model variants — final configuration achieves AP = 0.356,
+            the best among all experiments.
+          </p>
+        </div>
+        <!-- Feature Importance -->
+        <div class="card" style="padding:1.25rem;">
+          <div style="font-size:0.95rem;font-weight:700;color:var(--teal);margin-bottom:0.2rem;">Interpretability</div>
+          <div class="section-label">Permutation Feature Importance</div>
+          <img src="./figures/07_feature_importance_permutation.png" alt="Feature Importance"
+               style="width:100%;border-radius:0.5rem;object-fit:contain;max-height:210px;display:block;margin-top:0.5rem;">
+          <p class="fig-caption">
+            Fig 8. Top-20 fingerprint bits by ΔAUC — tertiary amines, phenols, and aromatic
+            fragments are the most predictive chemical motifs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin-bottom:4rem;">
+
+    <!-- ── Section 6: What's Next ─────────────────────────────── -->
+    <section>
+      <div style="text-align:center;margin-bottom:2rem;">
+        <div class="section-label" style="text-align:center;">Summary &amp; Next Steps</div>
+        <h2 style="font-size:1.7rem;font-weight:800;color:var(--teal);margin-bottom:0.4rem;">
+          What We Built &amp; Where It Goes
+        </h2>
+      </div>
+
+      <div class="next-cards">
+        <div class="card" style="padding:1.5rem;">
+          <div style="width:2rem;height:2rem;background:rgba(45,212,191,0.12);border:1px solid var(--border2);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div style="font-weight:700;font-size:0.95rem;color:#e5e7eb;margin-bottom:0.5rem;">What We Built</div>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;">
+            End-to-end pipeline from raw SMILES to HIV inhibition probability: RDKit fingerprinting,
+            PyTorch MLP, weighted loss, and full evaluation suite. Trained on public ChEMBL bioactivity data.
+          </p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <div style="width:2rem;height:2rem;background:rgba(45,212,191,0.12);border:1px solid var(--border2);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div style="font-weight:700;font-size:0.95rem;color:#e5e7eb;margin-bottom:0.5rem;">Why It Matters</div>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;">
+            Computational virtual screening reduces cost-per-candidate by ~100×, enabling researchers
+            to prioritize the most promising compounds before expensive wet-lab validation.
+          </p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <div style="width:2rem;height:2rem;background:rgba(129,140,248,0.12);border:1px solid rgba(129,140,248,0.3);border-radius:0.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div style="font-weight:700;font-size:0.95rem;color:#e5e7eb;margin-bottom:0.5rem;">Next Steps</div>
+          <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;">
+            Graph Neural Networks for richer 3D molecular representations, active learning loops for
+            iterative compound prioritization, and multi-target generalization beyond HIV-1 protease.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer / QR ────────────────────────────────────────── -->
+    <footer>
+      <!-- Left: QR + links -->
+      <div class="footer-qr-block">
+        <div>
+          <a href="https://github.com/kadinelbak/HIV-Proteases-Detector"
+             target="_blank" rel="noopener noreferrer"
+             title="GitHub: kadinelbak/HIV-Proteases-Detector">
+            <div class="qr-wrap">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fgithub.com%2Fkadinelbak%2FHIV-Proteases-Detector"
+                alt="QR Code — github.com/kadinelbak/HIV-Proteases-Detector"
+                width="130"
+                height="130"
+                style="display:block;"
+              >
+            </div>
+          </a>
+          <p style="font-size:0.65rem;color:var(--faint);margin-top:0.5rem;text-align:center;">
+            Scan to open on GitHub
+          </p>
+        </div>
+
+        <div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.3rem;">
+            Full source code, model weights &amp; notebooks:
+          </div>
+          <a href="https://github.com/kadinelbak/HIV-Proteases-Detector"
+             target="_blank" rel="noopener noreferrer"
+             style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:0.85rem;word-break:break-all;text-decoration:none;">
+            github.com/kadinelbak/HIV-Proteases-Detector
+          </a>
+          <div class="footer-links">
+            <a href="./index.html" class="cta-btn">Full Presentation →</a>
+            <a href="https://github.com/kadinelbak/HIV-Proteases-Detector"
+               target="_blank" rel="noopener noreferrer"
+               class="cta-btn cta-btn-ghost">
+              GitHub Repo
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: tech stack -->
+      <div class="footer-meta">
+        Built with PyTorch &middot; RDKit &middot; scikit-learn<br>
+        Dataset: ChEMBL HIV bioactivity screen<br>
+        Open-source &middot; Reproducible research<br>
+        <br>
+        <span style="color:#374151;">Kadin Elbakhit &middot; Spring 2026</span>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>

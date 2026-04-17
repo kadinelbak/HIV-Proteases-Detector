@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -51,31 +51,9 @@
           <!-- Left: Card with Tabs -->
           <div class="col-span-7 flex flex-col relative slide-up h-full">
             <div class="card-clear w-full h-full flex flex-col items-center p-0">
-              <div class="flex gap-2 justify-center pt-3 pb-2">
-                <button class="tab-btn tab-active" data-tab="fig1">Figure</button>
-                <button class="tab-btn" data-tab="int1">Interactive</button>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="fig1">
-                <div id="hiv3d" class="w-full flex flex-col items-center justify-center mb-4">
-                  <img src="./figures/hiv_protease_3d.webp" alt="HIV-1 Protease 3D" class="rounded-xl shadow-2xl demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
-                  <div class="mt-2 text-xs text-gray-400">(High-fidelity render or animation here)</div>
-                </div>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="int1" style="display:none">
-                <div class="w-full flex flex-col items-center mt-2">
-                  <div class="text-lg font-bold mb-1">Cost Savings</div>
-                  <div class="flex gap-8 items-end">
-                    <div class="flex flex-col items-center">
-                      <span class="text-2xl font-mono text-red-400 line-through">$2,000,000</span>
-                      <span class="text-xs text-gray-400">Wet Lab</span>
-                    </div>
-                    <span class="text-4xl font-bold accent">→</span>
-                    <div class="flex flex-col items-center">
-                      <span id="cost-counter" class="text-3xl font-mono text-green-400">$12,000</span>
-                      <span class="text-xs text-gray-400">In-Silico</span>
-                    </div>
-                  </div>
-                  <div class="mt-2 text-xs text-gray-400">(Counter animates on slide entry)</div>
+              <div class="w-full p-6 flex items-center justify-center">
+                <div id="hiv3d" class="w-full flex flex-col items-center justify-center">
+                  <img src="./figures/hiv_protease_3d.webp" alt="HIV-1 Protease 3D" class="rounded-xl shadow-2xl demo-img" style="max-height:340px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
             </div>
@@ -121,11 +99,11 @@
               <div class="tab-panel w-full p-6" data-panel="fig2">
                 <div class="mt-4 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Sample Fingerprint</div>
-                  <img src="./figures/02_sample_fingerprints.png" alt="Sample Fingerprint" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
+                  <img src="./figures/02_sample_fingerprints.png" alt="Sample Fingerprint" class="rounded-lg shadow-lg demo-img" style="max-height:280px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
               <div class="tab-panel w-full p-3" data-panel="int2" style="display:none">
-                <div class="text-xs text-gray-400 text-center mb-2">Each atom's circular neighborhood (radius 0–2) hashes to <em>multiple scattered</em> bit positions in the 2048-bit fingerprint</div>
+                <div class="text-xs text-gray-400 text-center mb-2">Each atom's circular neighborhood (radius 0–2) hashes to <em>multiple scattered</em> bit positions in the 2048-bit fingerprint</div>
                 <!-- Molecule: acetyl aminophenol — CC(=O)Nc1ccc(O)cc1 -->
                 <div id="smiles-string" class="font-mono text-sm bg-black/30 rounded px-3 py-2 mb-3 text-center select-none tracking-wide">
                   <span class="smiles-group font-bold" data-bits="45,234,812" data-color="#f59e0b" title="Methyl group — CH₃: 3 hash hits">CH₃</span><!--
@@ -184,18 +162,9 @@
           <!-- Left: Card with Tabs -->
           <div class="col-span-7 flex flex-col relative slide-up h-full">
             <div class="card-clear w-full h-full flex flex-col items-center p-0">
-              <div class="flex gap-2 justify-center pt-3 pb-2">
-                <button class="tab-btn tab-active" data-tab="fig3">Figure</button>
-                <button class="tab-btn" data-tab="int3">Interactive</button>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="fig3">
+              <div class="w-full p-6 flex flex-col items-center">
                 <div class="font-bold accent mb-3 text-xl">Class Distribution</div>
-                <img src="./figures/01_class_distribution.png" alt="Class Distribution" class="rounded-lg shadow-lg demo-img mb-4" style="max-height:280px;max-width:100%;object-fit:contain;">
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="int3" style="display:none">
-                <button id="random-guesser-btn" class="mt-2 px-4 py-2 rounded bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 transition">Random Guesser</button>
-                <div id="random-guesser-result" class="mt-4 text-lg text-yellow-400 font-mono" style="display:none"></div>
-                <div class="mt-2 text-xs text-gray-400">Click to see why accuracy is misleading!</div>
+                <img src="./figures/01_class_distribution.png" alt="Class Distribution" class="rounded-lg shadow-lg demo-img" style="max-height:340px;max-width:100%;object-fit:contain;">
               </div>
             </div>
           </div>
@@ -222,25 +191,10 @@
           <!-- Left: Card with Tabs -->
           <div class="col-span-7 flex flex-col relative slide-up h-full">
             <div class="card-clear w-full h-full flex flex-col items-center p-0">
-              <div class="flex gap-2 justify-center pt-3 pb-2">
-                <button class="tab-btn tab-active" data-tab="fig4">Figure</button>
-                <button class="tab-btn" data-tab="int4">Interactive</button>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="fig4">
+              <div class="w-full p-6 flex flex-col items-center">
                 <div class="mt-6 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Training/Validation Loss</div>
-                  <img src="./figures/03_training_validation_loss.png" alt="Training/Validation Loss" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
-                </div>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="int4" style="display:none">
-                <div class="font-semibold mb-2">MLP Schematic & Backprop Visualizer</div>
-                <div class="flex flex-col items-center">
-                  <canvas id="mlp-canvas" width="340" height="180" style="width:340px;height:180px;background:transparent;"></canvas>
-                  <div class="flex gap-4 mt-4">
-                    <button id="fire-signal" class="px-3 py-1 rounded bg-[#2dd4bf] text-black font-bold">Step Forward</button>
-                    <button id="fire-back" class="px-3 py-1 rounded bg-red-400 text-black font-bold">Backprop Error</button>
-                  </div>
-                  <span class="text-xs mt-2">Step: forward pass; Backprop: error signal</span>
+                  <img src="./figures/03_training_validation_loss.png" alt="Training/Validation Loss" class="rounded-lg shadow-lg demo-img" style="max-height:340px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
             </div>
@@ -264,61 +218,7 @@
             </div>
         </div>
       </section>
-      <!-- Slide: MLP Interactive Details (Dropout & ReLU) -->
-      <section data-transition="fade">
-        <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
-          <div class="col-span-12 px-4 pt-2 pb-0 slide-up">
-            <h2 class="accent text-2xl font-bold leading-tight">MLP: Interactive Details</h2>
-            <div class="secondary text-base mb-0">Explore Dropout and ReLU interactively</div>
-          </div>
-          <div class="col-span-7 flex flex-col relative slide-up h-full">
-            <div class="card-clear w-full h-full flex flex-col items-center p-0">
-              <div class="flex gap-2 justify-center pt-3 pb-2">
-                <button class="tab-btn tab-active" data-tab="dropout">Dropout</button>
-                <button class="tab-btn" data-tab="relu">ReLU</button>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="dropout">
-                <div class="font-bold accent mb-2">Dropout Training Demo</div>
-                <div id="dropout-visual" style="min-height:220px;"></div>
-                <button id="dropout-randomize" class="mt-4 px-3 py-1 rounded bg-indigo-500 text-white font-bold shadow hover:bg-indigo-600 transition">Randomize Dropout</button>
-                <div class="text-xs text-gray-400 mt-2">Toggle nodes to see how dropout affects the network, but the output can still be reached!</div>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="relu" style="display:none">
-                <div class="font-bold accent mb-2">ReLU Function Demo</div>
-                <label for="relu-input" class="block mb-2">Weighted Sum Input:</label>
-                <input type="range" id="relu-input" min="-5" max="5" value="0" step="0.1" class="w-48 accent">
-                <span id="relu-input-value" class="ml-2 font-mono">0</span>
-                <div id="relu-visual" class="mt-4" style="min-height:60px;"></div>
-                <div class="text-xs text-gray-400 mt-2">Move the slider to see how ReLU collapses negative values to 0 and passes positive values through.</div>
-              </div>
-            </div>
-          </div>
-          <div class="col-span-5 text-left p-4 pt-1 slide-up">
-            <div class="mb-6">
-              <h3 class="accent font-bold mb-2">Dropout</h3>
-              <p class="text-gray-300 text-sm mb-2">Dropout randomly disables ("drops") a subset of neurons during training, forcing the network to learn redundant paths. This prevents overfitting and makes the model more robust.</p>
-              <ul class="text-xs text-gray-300 mb-4">
-                <li>Randomly zeroes 50% of activations during training</li>
-                <li>Forces network to not rely on any single path</li>
-                <li>At inference, all nodes are used (no dropout)</li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="accent font-bold mb-2">ReLU</h3>
-              <p class="text-gray-300 text-sm mb-2">The ReLU (Rectified Linear Unit) activation function outputs zero for negative values and passes positive values unchanged. This enables non-linear learning and helps networks train faster.</p>
-              <ul class="text-xs text-gray-300">
-                <li>Formula: $\text{ReLU}(x) = \max(0, x)$</li>
-                <li>Collapses negative weighted sums to zero</li>
-                <li>Keeps positive signals intact</li>
-              </ul>
-            </div>
-            <div class="mt-4" style="font-size:0.85em;">
-              $$\tilde{h} = h \odot m,\quad m_i \sim \text{Bernoulli}(1-p)$$
-              <div class="text-xs text-gray-400 mt-1">Dropout mask $ m $ zeros each neuron independently with probability $ p $</div>
-            </div>
-          </div>
-        </div>
-      </section>
+
       <!-- Slide 5: The Build (Weighted Loss, Dual-Pane) -->
       <section data-transition="fade">
         <div class="grid grid-cols-12 gap-8 items-start h-full min-h-[580px]">
@@ -329,30 +229,10 @@
           <!-- Left: Card with Tabs -->
           <div class="col-span-7 flex flex-col relative slide-up h-full">
             <div class="card-clear w-full h-full flex flex-col items-center p-0">
-              <div class="flex gap-2 justify-center pt-3 pb-2">
-                <button class="tab-btn tab-active" data-tab="fig5">Figure</button>
-                <button class="tab-btn" data-tab="int5">Interactive</button>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="fig5">
+              <div class="w-full p-6 flex flex-col items-center">
                 <div class="mt-6 flex flex-col items-center">
                   <div class="font-bold accent mb-1">Confusion Matrix</div>
-                  <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix" class="rounded-lg shadow-lg demo-img mb-2" style="max-height:280px;max-width:100%;object-fit:contain;">
-                </div>
-              </div>
-              <div class="tab-panel w-full p-6" data-panel="int5" style="display:none">
-                <div class="font-semibold mb-2">Weighted Scale Demo</div>
-                <div class="flex flex-col items-center gap-4">
-                  <div id="scale-visual" style="position:relative;width:220px;height:130px;">
-                    <!-- Animated scale will be rendered here -->
-                    <svg id="scale-svg" width="220" height="130" style="display:block;margin:auto;"></svg>
-                  </div>
-                  <input type="range" min="1" max="40" value="27" id="scale-slider" class="w-48 mt-2 accent">
-                  <div class="flex gap-4 mt-2">
-                    <span class="text-xs">Inactive: 40,000</span>
-                    <span class="text-xs">Active: 1,443</span>
-                    <span class="text-xs">Penalty: <span id="scale-penalty">27</span>x</span>
-                  </div>
-                  <span class="text-xs mt-2 text-gray-400">Move the slider to balance the scale</span>
+                  <img src="./figures/05_confusion_matrix.png" alt="Confusion Matrix" class="rounded-lg shadow-lg demo-img" style="max-height:340px;max-width:100%;object-fit:contain;">
                 </div>
               </div>
             </div>
@@ -511,25 +391,23 @@
             <div class="col-span-7 flex flex-col relative slide-up h-full">
               <div class="card-clear w-full h-full flex flex-col items-center p-0">
                 <div class="flex gap-2 justify-center pt-3 pb-2">
-                  <button class="tab-btn tab-active" data-tab="fig8">Figure</button>
-                  <button class="tab-btn" data-tab="int8">Data</button>
+                  <button class="tab-btn tab-active" data-tab="figD">Figure</button>
+                  <button class="tab-btn" data-tab="intD">Data</button>
                 </div>
-                <div class="tab-panel w-full p-6" data-panel="fig8">
+                <div class="tab-panel w-full p-6" data-panel="figD">
                   <div class="mt-4 flex flex-col items-center">
                     <div class="font-bold accent mb-1">Top 20 Important Fingerprint Bits</div>
-                    <img src="./figures/07_feature_importance_permutation.png" alt="Feature Importance" 
+                    <img src="./figures/07_feature_importance_permutation.png" alt="Feature Importance"
                       class="rounded-lg shadow-lg demo-img mb-2" style="max-height:300px;max-width:100%;object-fit:contain;">
                     <div class="text-xs text-gray-400 mt-2">Permutation Importance on test set</div>
                   </div>
                 </div>
-                <div class="tab-panel w-full px-4 pb-3 pt-2" data-panel="int8" style="display:none">
-                  <!-- Molecule grid viewer with highlight overlay -->
+                <div class="tab-panel w-full px-4 pb-3 pt-2" data-panel="intD" style="display:none">
                   <div class="text-xs text-gray-400 mb-1">Hover a row to highlight the fragment on an example molecule</div>
                   <div id="mol-env-container" style="position:relative;width:100%;border-radius:8px;overflow:hidden;background:#111;line-height:0;">
                     <img id="mol-env-img" src="./figures/08_bit_environments.png"
                       alt="Bit atom environments"
                       style="width:100%;display:block;border-radius:8px;">
-                    <!-- Highlight overlay — repositioned by JS -->
                     <div id="mol-env-highlight" style="
                       display:none;
                       position:absolute;
@@ -540,7 +418,6 @@
                       transition: left 0.15s, top 0.15s;
                     "></div>
                   </div>
-                  <!-- Scrollable top-10 table -->
                   <div style="max-height:148px;overflow-y:auto;margin-top:8px;">
                     <table id="feat-imp-table" style="width:100%;border-collapse:collapse;font-size:11px;">
                       <thead>
@@ -553,7 +430,6 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <!-- data-mol-idx: 0-5 = grid cell, -1 = not in grid -->
                         <tr class="feat-row" data-mol-idx="0" style="border-left:3px solid #A3BE8C;cursor:pointer;">
                           <td style="padding:3px 5px;">1</td><td style="padding:3px 5px;font-family:monospace;">350</td><td style="padding:3px 5px;text-align:right;color:#A3BE8C;">0.00331</td><td style="padding:3px 5px;text-align:right;">8.4%</td><td style="padding:3px 8px;">atom center</td>
                         </tr>
@@ -645,12 +521,10 @@
                   <li class="flex items-center gap-2"><span class="text-[#818cf8]">&#x25B6;</span> Active learning: model picks next compound to test</li>
                   <li class="flex items-center gap-2"><span class="text-[#2dd4bf]">&#x25B6;</span> Interpretability: which substructures matter?</li>
                 </ul>
-                <div class="mt-3 mb-2" style="font-size:0.85em;">
-                  $$h_v^{(k)} = \sigma\!\left(W^{(k)}\!\sum_{u\in\mathcal{N}(v)}\!\frac{h_u^{(k-1)}}{|\mathcal{N}(v)|}\right)$$
-                  <div class="text-xs text-gray-500 mt-1">GNN aggregates neighbor features at each layer</div>
-                </div>
                 <div class="flex items-center gap-4 border-t border-white/10 pt-3">
-                  <img src="./figures/github_qr.png" alt="GitHub QR Code" style="width:80px;height:80px;border-radius:0.5rem;border:1px solid rgba(45,212,191,0.4);">
+                  <a href="https://github.com/kadinelbak/HIV-Proteases-Detector" target="_blank" rel="noopener noreferrer">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fgithub.com%2Fkadinelbak%2FHIV-Proteases-Detector" alt="GitHub QR Code" style="width:90px;height:90px;border-radius:0.25rem;border:2px solid rgba(45,212,191,0.4);background:#fff;padding:2px;display:block;">
+                  </a>
                   <div>
                     <div class="text-xs text-gray-400 mb-1">My GitHub</div>
                     <div class="text-xs text-[#2dd4bf] font-mono">kadinelbak/HIV-Proteases-Detector</div>
@@ -668,11 +542,8 @@
             <div class="text-xl text-gray-300 mb-4">Questions? Discussion?</div>
             <div class="flex flex-col items-center gap-4 mt-8">
               <div class="text-base text-gray-400">Contact: <span class="text-[#2dd4bf]">kadinelbak@gmail.com</span></div>
-              <a href="https://github.com/kadinelbak/HIV-Proteases-Detector" target="_blank" class="text-[#2dd4bf] underline">GitHub: kadinelbak/HIV-Proteases-Detector</a>
-            </div>
-            <div class="mt-8" style="font-size:0.85em;">
-              $$P(\text{active}\mid\mathbf{x}) = \sigma(f_\theta(\mathbf{x}))$$
-              <div class="text-xs text-gray-500 mt-1">The model in a single equation: sigmoid of a learned transformation</div>
+              <a href="https://github.com/kadinelbak/HIV-Proteases-Detector" target="_blank" rel="noopener noreferrer" class="text-[#2dd4bf] underline">GitHub: kadinelbak/HIV-Proteases-Detector</a>
+              <a href="./synopsis.html" class="text-[#818cf8] underline text-sm">← Project Overview (One-Page Synopsis)</a>
             </div>
             <div class="mt-12">
               <span class="text-xs text-gray-500">This research was made possible by open-source science and the support of the community.</span>
@@ -740,3 +611,5 @@
   <script src="./custom.js"></script>
 </body>
 </html>
+
+
