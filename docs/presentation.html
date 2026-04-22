@@ -61,6 +61,10 @@
           <!-- Right: Narrative -->
           <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">Harnessing computational screening to revolutionize drug discovery—dramatically reducing wet-lab costs and accelerating the identification of novel HIV-1 protease inhibitors.</p>
+            <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div class="text-gray-100 font-semibold mb-1">Context for this project</div>
+              <div>HIV-1 protease is an enzyme the virus needs to mature. If a molecule inhibits this target, viral replication can be disrupted. This model predicts inhibitor likelihood so chemists can prioritize compounds for real lab assays.</div>
+            </div>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "Every dollar saved here is a day closer to a cure."
             </div>
@@ -136,6 +140,10 @@
           <!-- Right: Narrative Only -->
             <div class="col-span-5 text-left p-4 pt-1 slide-up">
               <p class="mt-2 text-gray-300 text-lg">Morgan Fingerprints encode circular neighborhoods of atoms into bit-vectors that the MLP can actually "read." This bridges the gap between raw chemistry and machine learning.</p>
+              <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+                <div class="text-gray-100 font-semibold mb-1">How to read this slide</div>
+                <div>Left panel maps molecular fragments to active bits. A "1" means a hashed substructure is present, not that a specific atom index was learned directly. Multiple fragments can map to nearby bits because hashing is compressed.</div>
+              </div>
               <ul class="mt-4 text-sm text-gray-300 space-y-2">
                 <li><strong>SMILES:</strong> Symbolic encoding of molecular structure (atoms, bonds, rings)</li>
                 <li><strong>Morgan FP:</strong> 2048-bit hash of atom neighborhoods (radius=2, diameter=4 bonds)</li>
@@ -171,6 +179,10 @@
           <!-- Right: Narrative Only -->
           <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="mt-2 text-gray-300 text-lg">The dataset is <b>highly imbalanced</b>: 3.5% Active, 96.5% Inactive. A model that always predicts "Inactive" gets 96.5% accuracy—but finds zero drugs. We need specialized loss functions.</p>
+            <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div class="text-gray-100 font-semibold mb-1">Why this matters</div>
+              <div>Only about 1 in 29 molecules is active. In this setting, recall (catching true actives) and precision (avoiding excessive false leads) are more decision-relevant than raw accuracy.</div>
+            </div>
             <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
               "If you always guess 'Inactive', you win the accuracy game but lose the drug discovery race."
             </div>
@@ -202,6 +214,10 @@
           <!-- Right: Narrative Only -->
             <div class="col-span-5 text-left p-4 pt-1 slide-up">
               <p class="mt-2 text-gray-300 text-lg">A multilayer perceptron (MLP) learns to map molecular fingerprints to inhibition probability. Each layer transforms the representation, extracting higher-order features. Backpropagation enables the network to learn from errors and improve predictions.</p>
+              <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+                <div class="text-gray-100 font-semibold mb-1">How to interpret the loss plot</div>
+                <div>If training and validation loss both fall and remain close, the model is learning generalizable patterns. A widening gap would indicate overfitting (memorizing training molecules instead of learning transferable chemistry).</div>
+              </div>
               <ul class="mt-4 text-sm text-gray-300 space-y-2">
                 <li><strong>Input layer:</strong> 2048 bits (Morgan fingerprint)</li>
                 <li><strong>Hidden layers:</strong> 512 → 256 units with ReLU activation</li>
@@ -240,6 +256,10 @@
           <!-- Right: Narrative Only -->
             <div class="col-span-5 text-left p-4 pt-1 slide-up">
               <p class="mt-2 text-gray-300 text-lg">We force the model to care ~27x more about missing an Active compound. The penalty slider shows how the scale balances as we increase the weight for Actives.</p>
+              <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+                <div class="text-gray-100 font-semibold mb-1">Where 27x comes from</div>
+                <div>This weight is approximately the inactive-to-active ratio in training data, so each missed active contributes a comparable total penalty to many correctly labeled inactives.</div>
+              </div>
               <ul class="mt-4 text-sm text-gray-300 space-y-2">
                 <li><strong>Binary Cross-Entropy (BCE):</strong> Standard loss for binary classification</li>
                 <li><strong>Weighted BCE:</strong> Applies weight $ w $ to positive class losses to handle imbalance</li>
@@ -289,6 +309,10 @@
           <!-- Right: Live Readout -->
           <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="text-gray-300 text-base mb-4">Drag the threshold — watch how sensitivity (TPR) trades off against false alarms (FPR). For drug discovery, we prefer high recall even at the cost of more false positives.</p>
+            <div class="mb-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div class="text-gray-100 font-semibold mb-1">Reading AUROC in context</div>
+              <div>AUROC = 0.5 is random ranking; AUROC = 1.0 is perfect ranking. This model's 0.7876 indicates useful separation, and the threshold slider converts that ranking into an operating policy for screening.</div>
+            </div>
             <div class="card p-4 text-sm font-mono space-y-2" id="roc-readout">
               <div>TPR (Sensitivity): <span id="roc-tpr" class="text-[#2dd4bf] font-bold">—</span></div>
               <div>FPR (False Alarm):  <span id="roc-fpr" class="text-red-400 font-bold">—</span></div>
@@ -332,6 +356,10 @@
           <!-- Right: Live Readout -->
           <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="text-gray-300 text-base mb-4">The PR curve is critical for imbalanced data where positives are rare. High precision means fewer false alarms; high recall means fewer missed drugs. The threshold controls this trade-off directly.</p>
+            <div class="mb-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div class="text-gray-100 font-semibold mb-1">Why AP is emphasized here</div>
+              <div>The random-guess precision baseline equals class prevalence (0.035). AP = 0.356 means the model maintains precision about 10x above baseline across recall levels, which is strong for a rare-positive screen.</div>
+            </div>
             <div class="card p-4 text-sm font-mono space-y-2" id="pr-readout">
               <div>Precision: <span id="pr-precision" class="text-[#818cf8] font-bold">—</span></div>
               <div>Recall:    <span id="pr-recall" class="text-[#2dd4bf] font-bold">—</span></div>
@@ -370,6 +398,10 @@
           <!-- Right: Model Detail -->
           <div class="col-span-5 text-left p-4 pt-1 slide-up">
             <p class="text-gray-300 text-base mb-3">Each bar represents a different hyperparameter configuration. Click any bar to learn what changed and why it affected Average Precision.</p>
+            <div class="mb-3 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div class="text-gray-100 font-semibold mb-1">How to use this comparison</div>
+              <div>This plot is about model selection, not final claims. It shows which design choices (capacity, regularization, weighting) improved validation AP before locking one configuration and evaluating once on test data.</div>
+            </div>
             <div class="card p-4" id="ap-detail">
               <div class="text-xs text-gray-500 italic">Click a bar to see details</div>
             </div>
@@ -474,6 +506,10 @@
               <p class="mt-2 text-gray-300 text-lg">
                 The model doesn't just predict—it tells us <b>why</b>. By measuring how much accuracy drops when we shuffle each fingerprint bit, we identify the structural motifs the model learned.
               </p>
+              <div class="mt-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+                <div class="text-gray-100 font-semibold mb-1">Important caveat</div>
+                <div>Feature importance is associational, not causal. High-importance bits are strong hypotheses for medicinal chemistry follow-up, but they still require docking, synthesis, and biological validation.</div>
+              </div>
               <div class="mt-8 p-4 bg-black/30 border-l-4 border-indigo-500 italic text-sm">
                 "High-importance bits = chemical patterns the model associates with HIV inhibition."
               </div>
@@ -519,6 +555,10 @@
             <div class="col-span-5 p-4 pt-1 slide-up">
               <div class="card p-5">
                 <p class="text-gray-200 text-base mb-4">This project demonstrates the transformative potential of deep learning for molecular property prediction. Next steps: Graph Neural Networks for richer 3D molecular representations, and active learning for iterative wet-lab feedback loops.</p>
+                <div class="mb-4 p-3 bg-black/25 border border-white/10 rounded-lg text-xs text-gray-300 leading-relaxed">
+                  <div class="text-gray-100 font-semibold mb-1">Practical translation path</div>
+                  <div>Deploy as a triage tool: score large libraries, send top-ranked compounds to assay, retrain with new labels, and repeat. This human-in-the-loop cycle is where model value compounds over time.</div>
+                </div>
                 <ul class="text-sm text-gray-300 space-y-1 mb-4">
                   <li class="flex items-center gap-2"><span class="text-[#2dd4bf]">&#x25B6;</span> GNN: atoms as nodes, bonds as edges</li>
                   <li class="flex items-center gap-2"><span class="text-[#818cf8]">&#x25B6;</span> Active learning: model picks next compound to test</li>
@@ -543,6 +583,9 @@
           <div class="flex flex-col items-center justify-center h-full min-h-[580px] py-16">
             <h2 class="accent text-4xl font-bold mb-6">Thank You!</h2>
             <div class="text-xl text-gray-300 mb-4">Questions? Discussion?</div>
+            <div class="max-w-2xl text-center text-sm text-gray-400 leading-relaxed mb-2 px-4">
+              Summary: a fingerprint-based MLP with class-aware training improved rare-active retrieval (AUROC 0.7876, AP 0.356), making it useful as a first-pass prioritization layer before expensive experiments.
+            </div>
             <div class="flex flex-col items-center gap-4 mt-8">
               <div class="text-base text-gray-400">Contact: <span class="text-[#2dd4bf]">kadinelbak@gmail.com</span></div>
               <a href="https://github.com/kadinelbak/HIV-Proteases-Detector" target="_blank" rel="noopener noreferrer" class="text-[#2dd4bf] underline">GitHub: kadinelbak/HIV-Proteases-Detector</a>
